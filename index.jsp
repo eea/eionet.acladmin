@@ -26,7 +26,7 @@
 		document.forms["f"].submit();
 	}
 	function doLogin(appName) {
-		window.open("appLogin.jsp?app=" + appName,"login","height=200,width=400,status=no,toolbar=no,scrollbars=no,resizable=no,menubar=no,location=no");
+		window.open("appLogin.jsp?app=" + appName,"login","height=200,width=460,status=no,toolbar=no,scrollbars=no,resizable=no,menubar=no,location=no");
 	}
 
 //-->

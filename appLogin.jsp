@@ -56,7 +56,7 @@ function fillFields() {
 </script>
 </head>
 
-<body style="background-color:#f0f0f0" onload="fillFields()">
+<body class="popup" onload="fillFields()">
 <form name="l" name="LOGIN" method="post" action="main">
 <input type="hidden" name="ACTION" value='<%=Names.APPLOGIN_ACTION%>' />
 <input type="hidden" name="app" />

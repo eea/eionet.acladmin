@@ -309,3 +309,20 @@ th {
 	text-align: center;
 	font-size: 20pt;
 }
+
+/*
+ * Popups don't have left or right columns. Instead we
+ * indent the text a bit
+ */
+.popup {
+	margin:30px;
+	background-image: none;
+}
+
+.popuphead hr {
+	background-color: #ff9400;
+	height: 15px;
+	border: none;
+}
+
+
