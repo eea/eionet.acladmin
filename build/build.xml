@@ -1,0 +1,30 @@
+<project name="acladmin" default="buildjar" basedir=".">
+
+  <!--property file="build.properties" /-->
+
+  <!-- set global properties for this build -->
+  <property name="src" value="../src"/>
+
+	<property name="build" value="../WEB-INF/classes"/>
+  <property name="lib.dir" value="../WEB-INF/lib"/>
+
+  <target name="compile">
+    <!-- Compile the java code from ${src} into ${build} -->
+    <javac debug="on" deprecation="off"
+       srcdir="${src}"
+       destdir="${build}" classpath="/var/lib/tomcat4/common/lib/[servletapi4].jar;${lib.dir}/eionet-dir.jar;${lib.dir}/uit-security.jar;${lib.dir}/uit-client.jar"/>
+  </target>
+
+  <target name="buildjar" depends="compile"> 
+
+		<jar basedir="${build}" jarfile="${lib.dir}/uit-acladmin.jar" includes="**/*.class">
+			<manifest>
+				<attribute name="version-number" value="1.1"/>
+			</manifest>
+		</jar>
+
+		<delete dir="${build}/eionet"/>
+	</target>
+
+</project>
+
