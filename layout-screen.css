@@ -1,3 +1,4 @@
+@media screen { /* To prevent PocketPC from loading the stylesheet */
 
 /* Page head styles */
 #pagehead {
@@ -326,3 +327,4 @@ th {
 }
 
 
+} /* screen media */
