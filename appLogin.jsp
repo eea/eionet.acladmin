@@ -66,21 +66,12 @@ function fillFields() {
 
 	<tr>
 		<th >Username:</th>
-		<script type="text/javascript">
-			if (navigator.appName.substring(0,5) == "Netsc")
-				document.write("<th align='right'><input size='14' type='text' name='app_user'/></th>");
-			else
-				document.write("<th align='right'><input size='25' type='text' name='app_user'/></th>");
+                <th align='right'><input size='25' type='text' name='app_user'/></th>
 		</script>
 	</tr>
 	<tr>
 		<th >Password:</th>
-		<script type="text/javascript">
-			if (navigator.appName.substring(0,5) == "Netsc")
-				document.write("<th align='right'><input size='14' type='password' name='app_pwd' onkeydown='javascript:keyDown(event.keyCode)'/></th>");
-			else
-				document.write("<th align='right'><input size='25' type='password' name='app_pwd' onkeydown='javascript:keyDown(event.keyCode)'/></th>");
-		</script>
+                <th align='right'><input size='25' type='password' name='app_pwd' onkeydown='javascript:keyDown(event.keyCode)'/></th>
 	</tr>
 	<tr><td align="right" colspan="2">
 		<input name="SUBMIT" type="submit" value="Login" /></td>
