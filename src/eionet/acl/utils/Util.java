@@ -29,6 +29,9 @@ import eionet.directory.DirectoryService;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
+import com.tee.uit.client.ServiceClientException;
+import com.tee.uit.client.ServiceClientIF;
+
 /**
 * Common utils for ACL Admin Tool
 */
@@ -86,4 +89,29 @@ public class Util {
     }
     return null;
   }
+
+
+  	/*
+  	 * 
+  	 */
+  	public static Vector getChildrenAclsRecursive(ServiceClientIF appClient, String aclName)
+  																throws ServiceClientException{  		
+  		if (appClient==null)
+  			return null;
+  		
+  		Vector result = new Vector();
+  		
+  		Vector params = new Vector();
+  		params.add(aclName);
+  		Vector childrenAcls = (Vector)appClient.getValue("getChildrenAcls", params);
+  		for (int i=0; childrenAcls!=null && i<childrenAcls.size(); i++){
+  			String name = (String)childrenAcls.get(i);
+  			result.add(name);
+  			Vector v = getChildrenAclsRecursive(appClient, name);
+  			if (v!=null && v.size()>0)
+  				result.add(v);
+  		}
+  		
+  		return result;
+  	}
 }

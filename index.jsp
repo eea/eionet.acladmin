@@ -69,7 +69,7 @@
  		    String appName = (String)i.next();
 		 		//String appUrl = (String)apps.get(appName);
         String appUrl = (String) ((HashMap)apps.get(appName)).get("url");
-				
+        
 				int pos = appUrl.indexOf("//");
 				pos = appUrl.indexOf("/", pos+2);
 				appUrl=appUrl.substring(0,pos);
@@ -87,14 +87,63 @@
 	</tr>
 		<%  }  %>
         </tbody>
-      </table>
+      </table>      
 
-<form name="f" action="main" method="post">
-	<input type="hidden" name="app" value="" />
-	<input type="hidden" name="ACTION" value="" />
-	<input type="hidden" name="ACL" value="" />
-</form>
 <hr/>
+
+	<h1>Search across applications</h1>
+	<form name="index.jsp" action="main" method="post">
+	
+		<%
+		if (session.getAttribute(Names.ATT_ACROSS_APPS)==null){
+			%>
+			<h4>Username and password for searching across applications:</h4>
+			<table>
+				<tr>
+					<td align="right"><label for="username">Username:</label></td>
+					<td><input id="username" type="text" name="apps_user" /></td>
+				</tr>
+				<tr>
+					<td align="right"><label for="password">Password:</label></td>
+					<td><input id="password" type="password" name="apps_pwd" /></td>
+				</tr>
+			</table>
+			<%
+		}
+		%>
+		<h4>Search for:</h4>
+		<table>
+			<tr>
+				<td align="right">
+					<label for="subject_type">Subject type:</label>
+				</td>
+				<td>
+					<select id="subject_type" name="subject_type">
+						<option selected value="user">user</option>
+						<option value="localgroup">localgroup</option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<td align="right"><label for="subject_id">Subject ID:</label></td>
+				<td><input id="subject_id" type="text" name="subject_id" /></td>
+			</tr>
+			<tr>
+				<td>&nbsp;</td>
+				<td><input type="submit" name="submit" value="Search"/></td>
+			</tr>
+
+		</table>
+		
+		<input type="hidden" name="ACTION" value="search_across_apps"/>
+	</form>
+
+	<form name="f" action="main" method="post">
+		<input type="hidden" name="app" value="" />
+		<input type="hidden" name="ACTION" value="" />
+		<input type="hidden" name="ACL" value="" />
+	</form>
+
 </div> <!-- workarea -->
 </body>
 </html>

@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.Vector;
@@ -43,6 +44,7 @@ import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import eionet.directory.DirectoryService;
+import eionet.acl.AcrossApps;
 import eionet.acl.Names;
 import eionet.directory.DirServiceException;
 import com.tee.uit.security.AppUser;
@@ -194,6 +196,10 @@ public abstract class BaseAC extends HttpServlet {
     else if (action.equals("")) {
       jspName = Names.MAIN_JSP;
     }
+    else if (action.equals(Names.ACT_SEARCH_ACROSS_APPS)){
+    	jspName = Names.INDEX_JSP;
+    }
+    
     req.getRequestDispatcher(jspName).forward(req,res);
     
   }
@@ -328,4 +334,58 @@ public abstract class BaseAC extends HttpServlet {
         
    
   }
+  
+  	/*
+  	 * 
+  	 */
+	public void searchAcrossApps(HttpServletRequest req, HttpServletResponse res) throws Exception{
+		
+		// just make sure there is no previous result in request,
+		// even though I cannot see a way it can get in there
+		req.removeAttribute(Names.ATT_SEARCH_ACROSS_APPS_RESULT);
+  		
+		String subjectID = req.getParameter(Names.PRM_SUBJECT_ID);
+		String subjectType = req.getParameter(Names.PRM_SUBJECT_TYPE);
+		if (Util.isNullStr(subjectType) || Util.isNullStr(subjectID))
+			throw new Exception("Subject type or ID not supplied");
+		
+		if (!subjectType.equals("user") && !subjectType.equals("localgroup"))
+			throw new Exception("Unsupported subject type: " + subjectType);
+		
+		HttpSession session = req.getSession();
+		if (session==null)
+			throw new Exception("No session found in request");
+		
+		AcrossApps acrossApps = (AcrossApps)session.getAttribute(Names.ATT_ACROSS_APPS);
+		if (acrossApps==null){
+			String usr = req.getParameter(Names.PRM_ACROSS_APPS_USERNAME);
+			String psw = req.getParameter(Names.PRM_ACROSS_APPS_PASSWORD);
+			if (Util.isNullStr(usr) || Util.isNullStr(psw))
+				throw new Exception("Username or password not supplied");
+
+			acrossApps = new AcrossApps(apps, usr, psw);
+			try{
+				acrossApps.init();
+			}
+			catch (ServiceClientException sce){
+				String errApp = acrossApps.getCurInitApp();
+				if (errApp!=null) req.setAttribute(Names.ATT_ERR_APP, errApp);
+				throw sce;
+			}
+			
+			session.setAttribute(Names.ATT_ACROSS_APPS, acrossApps);
+		}
+		
+		Hashtable resultHash = acrossApps.getSubjectEntries(subjectID, subjectType);
+		if (resultHash!=null && resultHash.size()>0)
+			req.setAttribute(Names.ATT_SEARCH_ACROSS_APPS_RESULT, resultHash);
+		
+		// dispatch
+		String jspName = Names.JSP_SUBJECT_ACROSS_APPS;
+		RequestDispatcher dispatcher = req.getRequestDispatcher(jspName);
+		if (dispatcher==null)
+			throw new Exception("getRequestDispatcher(" + jspName + ") returned null");
+		
+		dispatcher.forward(req,res);
+  	}
 }

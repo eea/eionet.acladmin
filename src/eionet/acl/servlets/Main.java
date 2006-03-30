@@ -31,6 +31,7 @@ import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.Vector;
 
+import eionet.acl.AcrossApps;
 import eionet.acl.Names;
 
 import com.tee.uit.client.*;
@@ -73,7 +74,7 @@ public class Main extends BaseAC implements Names {
    private Vector childrenAcls;
 
   public void doGet( HttpServletRequest req, HttpServletResponse res ) throws ServletException, IOException {  
-
+	  
     String action=req.getParameter("ACTION");
     action = (action == null ? "" : action);
     HttpSession sess = req.getSession();
@@ -119,6 +120,29 @@ public class Main extends BaseAC implements Names {
         doAppLogin(req, res);
         action=SHOW_APP_ACTION;
         return;
+    }
+    
+    // search across applications
+    if (action.equals(Names.ACT_SEARCH_ACROSS_APPS)){
+    	try{
+    		req.removeAttribute(Names.ATT_ERR_APP);
+    		searchAcrossApps(req, res);
+    		return;
+    	}
+    	catch (Exception e){
+    		String errMessage = e.getMessage();
+    		if (errMessage==null) errMessage = e.toString();
+    		e.printStackTrace(System.out);
+    		if (e instanceof ServiceClientException){
+	    		String errApp = (String)req.getAttribute(Names.ATT_ERR_APP);    		
+	    		System.out.println("application=" + errApp);
+	    		if (errMessage!=null && errApp!=null)
+	    			errMessage = errMessage + " (application=" + errApp + ")";
+    		}
+    		
+    		handleError(req, res, errMessage, action);
+    		return;
+    	}
     }
 
     //new app selected
@@ -315,7 +339,6 @@ public class Main extends BaseAC implements Names {
       else  if ( action.equals( SHOW_PERMISSIONS_ACTION) )
         jspName= "permissions.jsp";
 
-
       req.setAttribute(SESS_ATT, req.getSession());
       req.getRequestDispatcher(jspName).forward(req,res);
       
@@ -329,8 +352,10 @@ public class Main extends BaseAC implements Names {
       if (appClients != null)      
         appClients.clear();
       
-      req.getSession().removeAttribute(USER_ATT);
-      req.getSession().removeAttribute(APPCLIENTS_ATT);
+      HttpSession session = req.getSession();
+      session.removeAttribute(USER_ATT);
+      session.removeAttribute(APPCLIENTS_ATT);
+      session.removeAttribute(ATT_ACROSS_APPS);
       
       req.removeAttribute(GROUPS_PARAM_NAME);
       req.removeAttribute(PERMS_PARAM_NAME);
