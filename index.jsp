@@ -1,8 +1,14 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <%@ page contentType="text/html;charset=UTF-8" import="java.util.Hashtable, java.util.Vector, java.util.HashMap, java.util.Iterator,
 		eionet.acl.utils.Util, eionet.acl.Names" %>
-<%
+<%	
 	HashMap appClients = (HashMap)session.getAttribute(Names.APPCLIENTS_ATT);
+%>
+
+<%
+response.setHeader("Cache-Control","no-store"); //HTTP 1.1
+response.setHeader("Pragma","no-cache"); //HTTP 1.0
+response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 %>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
   <head>
@@ -128,6 +134,16 @@
 				<td align="right"><label for="subject_id">Subject ID:</label></td>
 				<td><input id="subject_id" type="text" name="subject_id" /></td>
 			</tr>
+			<%
+			if (session.getAttribute(Names.ATT_ACROSS_APPS)!=null){
+				%>
+				<tr>
+					<td>&nbsp;</td>
+					<td><input type="checkbox" name="<%=Names.PRM_RELOAD_ACROSS_APPS%>"/>&nbsp;Reload</td>
+				</tr>
+				<%
+			}
+			%>
 			<tr>
 				<td>&nbsp;</td>
 				<td><input type="submit" name="submit" value="Search"/></td>

@@ -42,6 +42,14 @@ public class AcrossApps {
 	/*
 	 * 
 	 */
+	public void reload() throws ServiceClientException{
+		appsData = null;
+		init();
+	}
+	
+	/*
+	 * 
+	 */
 	public void init() throws ServiceClientException{
 		
 		// if already initialized, return
@@ -448,5 +456,21 @@ public class AcrossApps {
 		catch (Throwable t){
 			t.printStackTrace(System.out);
 		}
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getPassword() {
+		return password;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	public String getUsername() {
+		return username;
 	}
 }

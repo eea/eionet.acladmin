@@ -36,7 +36,7 @@
 
 	boolean isOwner=true;
 
-	if ( ((String)request.getAttribute(Names.NOTOWNER_ATT)).equals("false") )
+	if ( request.getAttribute(Names.NOTOWNER_ATT) ==null || ((String)request.getAttribute(Names.NOTOWNER_ATT)).equals("false") )
 		isOwner=false;
 
 
@@ -168,7 +168,7 @@ function cP (o) {
     </tr>
     <% } %>
 
-    <% if (acls.size()>0 ) { %>
+    <% if (acls!=null && acls.size()>0 ) { %>
      <tr>
             <th>Children ACLs: </th>
 
@@ -237,7 +237,7 @@ function cP (o) {
         </tr><!-- add row -->
         <% } %>
 
-                        <% for (int i=0; i<aclData.size(); i++) {
+                        <% for (int i=0; aclData!=null && i<aclData.size(); i++) {
                                 Hashtable aclEntry=(Hashtable)aclData.elementAt(i);
                                 String type=(String)aclEntry.get("type");
                                 String id=(String)aclEntry.get("id");

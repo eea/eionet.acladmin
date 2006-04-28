@@ -171,8 +171,8 @@ public class Main extends BaseAC implements Names {
         //put useful data to HttpSession        
         initAclData(sess);
       } catch (Exception e ) {
-          handleError(req,res, "Error getting ACL data from Application " + appName + " " + e.toString() , SHOW_APPS_ACTION);        
-          
+    	  e.printStackTrace(System.out);
+          handleError(req,res, "Error getting ACL data from Application " + appName + " " + e.toString() , SHOW_APPS_ACTION);          
           return;
       }
     }
@@ -214,7 +214,7 @@ public class Main extends BaseAC implements Names {
 
     //init only, if something changed=user has selected a nwe application or ACL to modify
     //selAcl=previously selected ACL, selApp = previously selected app
-    if ( !( selAcl.equals( aclName ) && selApp.equals( appName) ) || userChanged )
+    if ((appName!=null && !(selAcl.equals(aclName) && selApp.equals(appName))) || userChanged )
       try {
         HashMap apps = (HashMap)session.getAttribute(Names.APPLICATIONS_ATT);
         //remote XML/RPC clients data in appClients Hash
@@ -301,7 +301,11 @@ public class Main extends BaseAC implements Names {
     */
     private void dispatch(HttpServletRequest req, HttpServletResponse res, String action) throws ServletException, IOException  {
 
-      String jspName = MAIN_JSP;
+    	Object appNameAttr = null;
+    	if (req.getSession()!=null)
+    		appNameAttr = req.getSession().getAttribute(APP_ATT);
+    		
+    	String jspName = appNameAttr==null ? INDEX_JSP : MAIN_JSP;
 
       if (action.equals (SAVE_PERMS_ACTION))
         SaveHandler.savePermissions(req);

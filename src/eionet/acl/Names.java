@@ -43,7 +43,7 @@ public interface Names {
   public static final String NOTOWNER_ATT = "UIT_ACL_NOTOWNER_ATT";
   public static final String ATT_ACROSS_APPS = "UIT_ACL_ATT_ACROSS_APPS";
   public static final String ATT_SEARCH_ACROSS_APPS_RESULT = "UIT_ACL_ATT_SEARCH_ACROSS_APPS_RESULT";
-  public static final String ATT_ERR_APP = "UIT_ACL_ATT_ERR_APP";
+  public static final String ATT_ERR_APP = "UIT_ACL_ATT_ERR_APP";  
   
   //JSP names
   public static final String INDEX_JSP = "index.jsp";
@@ -87,4 +87,5 @@ public interface Names {
   public static final String PRM_ACROSS_APPS_PASSWORD = "apps_pwd";
   public static final String PRM_SUBJECT_ID = "subject_id";
   public static final String PRM_SUBJECT_TYPE = "subject_type";
+  public static final String PRM_RELOAD_ACROSS_APPS = "reload_across_apps";
 }

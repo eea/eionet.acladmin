@@ -375,6 +375,18 @@ public abstract class BaseAC extends HttpServlet {
 			
 			session.setAttribute(Names.ATT_ACROSS_APPS, acrossApps);
 		}
+		else if (req.getParameter(Names.PRM_RELOAD_ACROSS_APPS)!=null){ // reload
+			try{
+				acrossApps.reload();
+			}
+			catch (ServiceClientException sce){
+				String errApp = acrossApps.getCurInitApp();
+				if (errApp!=null) req.setAttribute(Names.ATT_ERR_APP, errApp);
+				throw sce;
+			}
+			
+			session.setAttribute(Names.ATT_ACROSS_APPS, acrossApps);
+		}
 		
 		Hashtable resultHash = acrossApps.getSubjectEntries(subjectID, subjectType);
 		if (resultHash!=null && resultHash.size()>0)
