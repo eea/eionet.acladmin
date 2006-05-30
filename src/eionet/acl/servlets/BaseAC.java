@@ -298,7 +298,8 @@ public abstract class BaseAC extends HttpServlet {
     }
 
     req.setAttribute(Names.SESS_ATT, session);
-  	printPage(res,"<script>window.opener.location='main?app=" + appName + "';window.close()</script></html>");
+  	printPage(res, "<html><script type=\"text/javascript\">window.opener.location='main?app=" +
+  			appName + "';window.close()</script></html>");
   }
 
   /**
