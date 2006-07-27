@@ -48,12 +48,10 @@ if (aclPermissions==null)
 %>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
+<%@ include file="headerinfo.txt" %>
   <title>Permissions</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <link rel="stylesheet" type="text/css" href="layout-screen.css" media="screen" title="EIONET style" />
-  <link rel="stylesheet" type="text/css" href="layout-print.css" media="print" />
-
 <script type="text/javascript">
+// <![CDATA[
 
 function cP (o) {
 	var prm = o.value
@@ -72,8 +70,7 @@ function openPage(action) {
 	document.forms["f"].submit();
 }
 
-
-
+// ]]>
 </script>
 
 <%@ include file="menu.jsp" %>

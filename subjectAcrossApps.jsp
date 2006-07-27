@@ -36,48 +36,28 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
-	<title>User across applications</title>
-	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-	  <link rel="stylesheet" type="text/css" href="layout-screen.css" media="screen" title="EIONET style" />
-	  <link rel="stylesheet" type="text/css" href="layout-print.css" media="print" />
-	
-	<style type="text/css">
-	.borderright {
-		border-right: #008080 1px solid
-	}
-	.borderleft {
-		border-left: #008080 1px solid
-	}
-	.bordertop {
-		border-top: #008080 1px solid
-	}
-	.borderbottom {
-		border-bottom: #008080 1px solid
-	}
-	td{
-		vertical-align: top;
-	}
-	</style>
-	<script type="text/javascript">
-	<!--
-		
-		function openPage(action) {
-			document.forms["f"].ACTION.value=action;
-			document.forms["f"].submit();
-		}
-		function openApp(appName) {
-			document.forms["f"].app.value=appName;
-			document.forms["f"].ACTION.value="";
-			document.forms["f"].ACL.value="/";
-			document.forms["f"].submit();
-		}
-		function doLogin(appName) {
-			window.open("appLogin.jsp?app=" + appName,"login","height=200,width=460,status=no,toolbar=no,scrollbars=no,resizable=no,menubar=no,location=no");
-		}
-	
-	//-->
-	</script>
-	<%@ include file="menu.jsp" %>
+<%@ include file="headerinfo.txt" %>
+<title>User across applications</title>
+<script type="text/javascript">
+// <![CDATA[
+
+function openPage(action) {
+	document.forms["f"].ACTION.value=action;
+	document.forms["f"].submit();
+}
+function openApp(appName) {
+	document.forms["f"].app.value=appName;
+	document.forms["f"].ACTION.value="";
+	document.forms["f"].ACL.value="/";
+	document.forms["f"].submit();
+}
+function doLogin(appName) {
+	window.open("appLogin.jsp?app=" + appName,"login","height=200,width=460,status=no,toolbar=no,scrollbars=no,resizable=no,menubar=no,location=no");
+}
+
+// ]]>
+</script>
+<%@ include file="menu.jsp" %>
 </head>
 <body>
 

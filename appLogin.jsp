@@ -11,12 +11,10 @@ else {
 
 
 <head>
+<%@ include file="headerinfo.txt" %>
 <title>User Authentication</title>
-  <link rel="stylesheet" type="text/css" href="layout-screen.css" media="screen" title="EIONET style" />
-  <link rel="stylesheet" type="text/css" href="layout-print.css" media="print" />
-
 <script type="text/javascript">
-
+// <![CDATA[
 function fillFields() {
 			var wl=window.location.toString();
 
@@ -52,7 +50,7 @@ function fillFields() {
 			submitForm();
 		}
 	}
-
+// ]]>
 </script>
 </head>
 

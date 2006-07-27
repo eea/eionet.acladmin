@@ -12,15 +12,11 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 %>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
   <head>
+<%@ include file="headerinfo.txt" %>
   <title>Admin permissions</title>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <link rel="stylesheet" type="text/css" href="layout-screen.css" media="screen" title="EIONET style" />
-  <link rel="stylesheet" type="text/css" href="layout-print.css" media="print" />
-  <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
-
 <script type="text/javascript">
-<!--
-	
+// <![CDATA[
+
 	function openPage(action) {
 		document.forms["f"].ACTION.value=action;
 		document.forms["f"].submit();
@@ -34,8 +30,7 @@ response.setDateHeader ("Expires", 0); //prevents caching at the proxy server
 	function doLogin(appName) {
 		window.open("appLogin.jsp?app=" + appName,"login","height=200,width=460,status=no,toolbar=no,scrollbars=no,resizable=no,menubar=no,location=no");
 	}
-
-//-->
+// ]]>
 </script>
 <%@ include file="menu.jsp" %>
 </head>

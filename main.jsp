@@ -45,27 +45,10 @@
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
+<%@ include file="headerinfo.txt" %>
 <title>Permissions</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <link rel="stylesheet" type="text/css" href="layout-screen.css" media="screen" title="EIONET style" />
-  <link rel="stylesheet" type="text/css" href="layout-print.css" media="print" />
-
-<style type="text/css">
-.borderright {
-	border-right: #008080 1px solid
-}
-.borderleft {
-	border-left: #008080 1px solid
-}
-.bordertop {
-	border-top: #008080 1px solid
-}
-.borderbottom {
-	border-bottom: #008080 1px solid
-}
-</style>
 <script type="text/javascript">
-<!--
+// <![CDATA[
 
 function cP (o) {
 	var prm = o.value
@@ -104,7 +87,7 @@ function cP (o) {
                     document.change_acl.submit();
 		}
 
-//-->
+// ]]>
 </script>
 <%@ include file="menu.jsp" %>
 </head>

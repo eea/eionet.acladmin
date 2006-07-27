@@ -12,13 +12,10 @@
 %>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
+<%@ include file="headerinfo.txt" %>
 <title>Admin permissions</title>
-<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-  <link rel="stylesheet" type="text/css" href="layout-screen.css" media="screen" title="EIONET style" />
-  <link rel="stylesheet" type="text/css" href="layout-print.css" media="print" />
-
 <script type="text/javascript">
-
+// <![CDATA[
 function showhelp(text) {
 	if (text != '')
 		alert(text);
@@ -32,52 +29,50 @@ function setFocus(){
 	t.focus();
 }
 
-}
 
+function changeParamInString(sUrl, sName, sValue){
+	var  i, j,  sBeg, sEnd, sStr;
 
-	function changeParamInString(sUrl, sName, sValue){
-		var  i, j,  sBeg, sEnd, sStr;
+	//KL 021009 -> in some reason does not work anymore :(
+	//sValue=escape(sValue);
 
-		//KL 021009 -> in some reason does not work anymore :(
-		//sValue=escape(sValue);
-
-		i = sUrl.indexOf(sName + '=');
-		if (i > 0) {
-			sBeg=sUrl.substr(0, i); 
-			sStr=sUrl.substr(i);
-			j = sStr.indexOf('&');
-			if (j > 0)
-			   sEnd = sStr.substr(j);
-			else
-			   sEnd= '';
-
-			sUrl=sBeg + sName + '=' + sValue + sEnd ;
-
-			}
+	i = sUrl.indexOf(sName + '=');
+	if (i > 0) {
+		sBeg=sUrl.substr(0, i); 
+		sStr=sUrl.substr(i);
+		j = sStr.indexOf('&');
+		if (j > 0)
+		   sEnd = sStr.substr(j);
 		else
-			{
+		   sEnd= '';
 
-			j = sUrl.indexOf('?');
-			if (j>0)
-				sUrl = sUrl + '&' + sName + '=' + sValue;
-			else
-				sUrl = sUrl + '?' + sName + '=' + sValue;
-			}
-		//return sUrl ;
-		redirect(sUrl);
+		sUrl=sBeg + sName + '=' + sValue + sEnd ;
+
 		}
+	else
+		{
 
-	function redirect(url){
-		//document.URL=url;
-		document.location=url;
-
+		j = sUrl.indexOf('?');
+		if (j>0)
+			sUrl = sUrl + '&' + sName + '=' + sValue;
+		else
+			sUrl = sUrl + '?' + sName + '=' + sValue;
+		}
+	//return sUrl ;
+	redirect(sUrl);
 	}
+
+function redirect(url){
+	//document.URL=url;
+	document.location=url;
+
+}
 
 var browser = document.all ? 'E' : 'N';
 
 var picklist = new Array();
 
-
+// ]]>
 </script>
 </head>
 <body onload="setFocus()">
