@@ -79,7 +79,7 @@
     <td>
       <form name='add_member' action='main' method='post'>
         <input name='MEMBER' type='text' />&nbsp;
-        <img width='38' alt='Add user to localgroup' src='images/add.png' onclick='add_member.submit();' height='18' />
+        <input type="submit" value="Add" title="Add user to localgroup"/>
         <input value='<%=Names.MEMBER_ADD_ACTION%>' name='ACTION' type='hidden' />
         <input value='<%=aclName%>' name='NAME' type='hidden' />
       </form>

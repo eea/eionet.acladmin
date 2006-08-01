@@ -75,7 +75,7 @@ function openPage(action) {
                   <td colspan="2">
                     <form name='add_group' action='main' method='post'>
                       <input onchange='fldValid(this)' name='NAME' type='text' />
-                      <img width='38' alt='Add new localgroup' src='images/new.png' onclick='add_group.submit();' height='18' />
+                      <input type="submit" value="Add" title="Add new localgroup"/>
                       <input value='<%=Names.GROUP_ADD_ACTION%>' name='ACTION' type='hidden' />
                     </form>
                   </td>

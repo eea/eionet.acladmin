@@ -213,7 +213,7 @@ function cP (o) {
                         &nbsp;
                 </td>
                 <td class="borderright bordertop borderleft borderbottom" >
-                    <img onclick="add_entry.submit();" height="18" width="38" src="images/add.png" alt="Add entry to ACL" />
+                    <input type="submit" value="Add" title="Add entry to ACL"/>
                     <input type="hidden" name="ACTION" value="<%=Names.ACL_ADD_ACTION%>" />
                 </td>
             </form>
