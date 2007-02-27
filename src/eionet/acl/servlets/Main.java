@@ -53,31 +53,27 @@ import com.tee.uit.security.SignOnException;
 public class Main extends BaseAC implements Names {
 
 	/** */
-	private  Hashtable permissions = null;
-	private  Hashtable groups = null;
-	private  Hashtable aclAdminData = null;   
-	private  HashMap acls = null;   
+	private Hashtable selectedAclPermissions = null;
+	private Hashtable selectedAppGroups = null;
+	private Hashtable aclManagerMetadata = null;   
+	private HashMap selectedAppAcls = null;   
 
 	/** */
-	private String owner = null;
+	private String selectedAclOwner = null;
 	
 	/** */
-	private String appName = null;
-	private String aclName = null;
-	
-	/** */
-	private String selectedAclName = "";
 	private String selectedAppName = "";
+	private String selectedAclName = "";
 	
 	/** */
-	private boolean userChanged = false;
+	private boolean isSessionUserChanged = false;
 	
 	/** */
-	private Vector aclData = null;
+	private Vector selectedAclRows = null;
 	
 	/** */
-	private Hashtable aclInfo = null;
-	private Vector childrenAcls = null;
+	private Hashtable selectedAclObject = null;
+	private Vector selectedAclChildrenAcls = null;
 	
 	/**
 	 * 
@@ -92,7 +88,7 @@ public class Main extends BaseAC implements Names {
 		//if logout, clear all parameters    
 		if (action.equals(LOGOUT_ACTION)) {
 			doLogout(req);
-			userChanged=true;
+			isSessionUserChanged=true;
 			action="";
 		}
 		
@@ -154,34 +150,29 @@ public class Main extends BaseAC implements Names {
 			}
 		}
 		
+		String requestedAppName = null;
+		String requestedAclName = null;
+		
 		//new app selected
 		if (action.equals("")) {
 			try {
-				appName = req.getParameter("app");
+				requestedAppName = req.getParameter("app");
+				if (requestedAppName==null)
+					requestedAppName = (String)sess.getAttribute(APP_ATT);
 				
-				//no in Req attribute, maybe in Session
-				if (appName==null)
-					appName=(String)sess.getAttribute(APP_ATT);
+				requestedAclName = req.getParameter("ACL");        
+				if (requestedAclName==null)       
+					requestedAclName = (String)sess.getAttribute(ACL_ATT);
+				requestedAclName = requestedAclName==null ? "/" : requestedAclName;
 				
-				//which ACL is selected          
-				aclName = req.getParameter("ACL");        
-				
-				//if not in request, check session
-				if (aclName==null)       
-					aclName = (String)sess.getAttribute(ACL_ATT);
-				
-				//if still null, select the root ACL                  
-				aclName= (aclName==null ? "/" : aclName);
-				
-				//those 2 attributes as session as well
-				sess.setAttribute(APP_ATT, appName);
-				sess.setAttribute(ACL_ATT, aclName);                
+				sess.setAttribute(APP_ATT, requestedAppName);
+				sess.setAttribute(ACL_ATT, requestedAclName);                
 				
 				//put useful data to HttpSession        
-				initAclData(sess);
+				initAclData(sess, requestedAppName, requestedAclName);
 			} catch (Exception e ) {
 				e.printStackTrace(System.out);
-				handleError(req,res, "Error getting ACL data from Application " + appName + " " + e.toString() , SHOW_APPS_ACTION);          
+				handleError(req,res, "Error getting ACL data from Application " + selectedAppName + " " + e.toString() , SHOW_APPS_ACTION);          
 				return;
 			}
 		}
@@ -193,14 +184,14 @@ public class Main extends BaseAC implements Names {
 		}
 		
 		//put all data, got from remote app as HttpRequest attributes
-		req.setAttribute(ACL_DATA_ATT, aclData);
-		req.setAttribute(ACL_CHILDREN_ATT, childrenAcls);
-		req.setAttribute(ACL_INFO_ATT, aclInfo);
-		req.setAttribute(GROUPS_PARAM_NAME, groups);
-		req.setAttribute(PERMS_PARAM_NAME, permissions);
+		req.setAttribute(ACL_DATA_ATT, selectedAclRows);
+		req.setAttribute(ACL_CHILDREN_ATT, selectedAclChildrenAcls);
+		req.setAttribute(ACL_INFO_ATT, selectedAclObject);
+		req.setAttribute(GROUPS_PARAM_NAME, selectedAppGroups);
+		req.setAttribute(PERMS_PARAM_NAME, selectedAclPermissions);
 		
 		//user is not the owner of selected ACL    
-		req.setAttribute(NOTOWNER_ATT, owner);  
+		req.setAttribute(NOTOWNER_ATT, selectedAclOwner);  
 		
 		//l("SETTING  = " + owner);      
 		
@@ -219,41 +210,41 @@ public class Main extends BaseAC implements Names {
 	}
 	
 	
-	private void initAclData(HttpSession session ) throws Exception {
+	private void initAclData(HttpSession session, String requestedAppName, String requestedAclName) throws Exception {
 		
 		//init only, if something changed=user has selected a nwe application or ACL to modify
 		//selAcl=previously selected ACL, selApp = previously selected app
-		if ((appName!=null && !(selectedAclName.equals(aclName) && selectedAppName.equals(appName))) || userChanged )
+		if ((requestedAppName!=null && !(selectedAclName.equals(requestedAclName) && selectedAppName.equals(requestedAppName))) || isSessionUserChanged )
 			try {
 				HashMap apps = (HashMap)session.getAttribute(Names.APPLICATIONS_ATT);
 				//remote XML/RPC clients data in appClients Hash
 				HashMap appClients = (HashMap)session.getAttribute(Names.APPCLIENTS_ATT);
 				
 				//the application, edited at the moment
-				HashMap app = (HashMap)apps.get(appName);
+				HashMap app = (HashMap)apps.get(requestedAppName);
 				
 				//entry values for auth and anonymous users -> will be changed
 				authUser = (String)app.get("authUser");
 				unauthUser = (String)app.get("unauthUser");      
 				
-				ServiceClientIF srv = (ServiceClientIF)appClients.get(appName);
+				ServiceClientIF srv = (ServiceClientIF)appClients.get(requestedAppName);
 				Vector prms = new Vector();
 				
-				if (! selectedAppName.equals(appName) || userChanged) {
+				if (! selectedAppName.equals(requestedAppName) || isSessionUserChanged) {
 					//new application selected, start from root ACL
-					aclName = "/";
-					session.setAttribute(ACL_ATT, aclName);
+					requestedAclName = "/";
+					session.setAttribute(ACL_ATT, requestedAclName);
 					
 					prms.removeAllElements();
 					
 					//l("Here we go!");
 					
 					//get groups from remote application
-					groups = (Hashtable)srv.getValue("getLocalGroups", prms);
+					selectedAppGroups = (Hashtable)srv.getValue("getLocalGroups", prms);
 					//l("groups from " + selApp + "  "  + groups);
 					
 					//aclManagerInfo
-					aclAdminData= (Hashtable)srv.getValue("getAclManagerInfo", prms);        
+					aclManagerMetadata= (Hashtable)srv.getValue("getAclManagerInfo", prms);        
 					
 					//String flagName=(String)aclAdminData.get("flags");
 					//permission flags
@@ -262,24 +253,24 @@ public class Main extends BaseAC implements Names {
 				}
 				
 				prms.removeAllElements();
-				prms.add(aclName);
+				prms.add(requestedAclName);
 				
 				//get list of children ACLs of the selected ACL
-				childrenAcls=(Vector)srv.getValue("getChildrenAcls", prms);    
+				selectedAclChildrenAcls=(Vector)srv.getValue("getChildrenAcls", prms);    
 				
-				selectedAclName = aclName;
+				selectedAclName = requestedAclName;
 				//owner=true;      
 				try {
 					//get ACL info from remote service
-					aclInfo = (Hashtable)srv.getValue("getAclInfo", prms);    
-					if (aclInfo!=null){
-						aclData = (Vector)aclInfo.get("entries");	          
-						owner= (String)aclInfo.get("owner");
+					selectedAclObject = (Hashtable)srv.getValue("getAclInfo", prms);    
+					if (selectedAclObject!=null){
+						selectedAclRows = (Vector)selectedAclObject.get("entries");	          
+						selectedAclOwner= (String)selectedAclObject.get("owner");
 						
-						String flagName=(String)aclInfo.get("flags");
-						Hashtable flags = (Hashtable)aclAdminData.get("flags");
+						String flagName=(String)selectedAclObject.get("flags");
+						Hashtable flags = (Hashtable)aclManagerMetadata.get("flags");
 						if (flags!=null)
-							permissions = (Hashtable)flags.get(flagName);
+							selectedAclPermissions = (Hashtable)flags.get(flagName);
 					}
 				}
 				catch (Exception e ) {
@@ -287,20 +278,20 @@ public class Main extends BaseAC implements Names {
 					throw new ServiceClientException(e, e.toString());
 				}
 				
-				selectedAppName = appName;
+				selectedAppName = requestedAppName;
 				
 			} catch (ServiceClientException se ) {
 				se.printStackTrace(System.out);
 				if ( se.toString().indexOf("AuthenticationException") != -1) {
 					//authentication failed in the remote server
-					appClients.remove(appName);
+					appClients.remove(requestedAppName);
 					throw new ServiceClientException(se, "Authentication in the remote application failed");
 				}
-				throw new Exception ("Error getting ACL data from the remote service " +  appName + 
+				throw new Exception ("Error getting ACL data from the remote service " +  requestedAppName + 
 						" " + se.toString());
 			}
 			
-			userChanged=false;
+			isSessionUserChanged=false;
 	}
 	
 	/**
@@ -357,8 +348,8 @@ public class Main extends BaseAC implements Names {
 	
 	private void doLogout(HttpServletRequest req) {
 		
-		groups=null;
-		permissions=null;
+		selectedAppGroups=null;
+		selectedAclPermissions=null;
 		
 		if (appClients != null)      
 			appClients.clear();

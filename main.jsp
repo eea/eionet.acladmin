@@ -113,13 +113,14 @@ function cP (o) {
 
 <div id="operations">
     <ul>
-    <% if (grpEdit) { %>
-    <li><a href="javascript:openPage('<%=Names.SHOW_GROUPS_ACTION%>')">Edit groups</a></li>
-    <% } %>
-
-    <% if (isOwner) { %>						
-    <li><a href="javascript:openPage('<%=Names.ACL_SAVE_ACTION%>')">Save ACL</a></li>
-    <% } %>
+    <%
+    if (grpEdit){ %>
+    	<li><a href="javascript:openPage('<%=Names.SHOW_GROUPS_ACTION%>')">Edit groups</a></li><%
+    }    
+    if (isOwner){ %>
+    	<li><a href="javascript:openPage('<%=Names.ACL_SAVE_ACTION%>')">Save ACL</a></li><%
+    }
+    %>
     </ul>
 </div>
     <% if (err!= null) { %>
