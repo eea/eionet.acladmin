@@ -3,17 +3,6 @@
 <%@ page import="java.util.Hashtable, java.util.Vector, java.util.HashMap, java.util.Iterator,
 		eionet.acl.utils.Util, eionet.acl.Names" %>
 
-<%
-	//HashMap apps = (HashMap)session.getAttribute(Names.APPLICATIONS_ATT);
-
-	//String thisAppName = (String)session.getAttribute(Names.APP_ATT);
-	//String err = (String)request.getAttribute(Names.ERROR_ATT);
-  //String ctx = request.getContextPath();
-
-  //Hashtable permissions = (Hashtable) request.getAttribute("PRMS");
-	//Hashtable groups = (Hashtable) request.getAttribute("GROUPS");
-
-%>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
 <%@ include file="headerinfo.txt" %>
@@ -83,7 +72,8 @@ function openPage(action) {
 		<!-- groups -->
 			<%
 				int ii=0;
-				for (Iterator i=groups.keySet().iterator(); i.hasNext();) {
+				Iterator i = groups!=null ? groups.keySet().iterator() : null;
+				while (i!=null && i.hasNext()) {
 					String name=(String)i.next();
 					Vector members = (Vector)groups.get(name);
 			
