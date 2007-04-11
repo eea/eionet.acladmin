@@ -45,7 +45,7 @@
 
 <div class="breadcrumbtrail">
     <div class="breadcrumbhead">You are here:</div>
-    <div class="breadcrumbitem"><a href="http://www.eionet.eu.int">EIONET</a></div>
+    <div class="breadcrumbitem eionetaccronym"><a href="http://www.eionet.europa.eu">Eionet</a></div>
     <div class="breadcrumbitem"><a href="javascript:openPage('<%=Names.SHOW_APPS_ACTION%>')">Applications</a></div>
     <div class="breadcrumbitem"><a href="javascript:openPage('')"><%=thisAppName%></a></div>
     <div class="breadcrumbitem"><a href="javascript:openPage('<%=Names.SHOW_GROUPS_ACTION%>')">Groups</a></div>
