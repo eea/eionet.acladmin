@@ -38,6 +38,8 @@ import com.tee.uit.client.*;
 
 import java.util.Hashtable;
 import javax.servlet.http.HttpSession;
+
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.HashMap;
 import eionet.directory.DirectoryService;
@@ -224,8 +226,8 @@ public class Main extends BaseAC implements Names {
 				HashMap app = (HashMap)apps.get(requestedAppName);
 				
 				//entry values for auth and anonymous users -> will be changed
-				authUser = (String)app.get("authUser");
-				unauthUser = (String)app.get("unauthUser");      
+				authUser = app==null ? null : (String)app.get("authUser");
+				unauthUser = app==null ? null : (String)app.get("unauthUser");      
 				
 				ServiceClientIF srv = (ServiceClientIF)appClients.get(requestedAppName);
 				Vector prms = new Vector();
@@ -321,14 +323,32 @@ public class Main extends BaseAC implements Names {
 		}
 		else if (action.equals(SAVE_GROUPS_ACTION) || action.equals(ACL_SAVE_ACTION)) {
 			try {
-				SaveHandler.callRemoteMethod(req,action );
-			} catch (Exception e ){
+				SaveHandler.callRemoteMethod(req,action);
+				if (action.equals(ACL_SAVE_ACTION)){
+					
+					String requestedAclName = req.getParameter("ACL");
+					HttpSession sess = req.getSession();
+					String requestedAppName = (String)sess.getAttribute(Names.APP_ATT);
+					
+					sess.setAttribute(APP_ATT, requestedAppName);
+					sess.setAttribute(ACL_ATT, requestedAclName);                
+					
+					initAclData(sess, requestedAppName, requestedAclName);
+					
+					req.setAttribute(ACL_DATA_ATT, selectedAclRows);
+					req.setAttribute(ACL_CHILDREN_ATT, selectedAclChildrenAcls);
+					req.setAttribute(ACL_INFO_ATT, selectedAclObject);
+					req.setAttribute(GROUPS_PARAM_NAME, selectedAppGroups);
+					req.setAttribute(PERMS_PARAM_NAME, selectedAclPermissions);
+					req.setAttribute(NOTOWNER_ATT, selectedAclOwner);
+				}
+			}
+			catch (Exception e ){
 				req.setAttribute(Names.ERROR_ATT, "Error saving data: " + e.getMessage());         
 				//throw new ServletException("Error calling remote method " + e.toString(), e);
 			}
 			action = "";
 		}
-		
 		
 		if ( action.equals( SHOW_APPS_ACTION ))
 			jspName= "index.jsp";
@@ -358,6 +378,12 @@ public class Main extends BaseAC implements Names {
 		session.removeAttribute(USER_ATT);
 		session.removeAttribute(APPCLIENTS_ATT);
 		session.removeAttribute(ATT_ACROSS_APPS);
+		session.removeAttribute(APP_ATT);
+		session.removeAttribute(ACL_ATT);
+		Enumeration e = session.getAttributeNames();
+		while (e!=null && e.hasMoreElements()){
+			System.out.println("session attribute " + e.nextElement());
+		}
 		
 		req.removeAttribute(GROUPS_PARAM_NAME);
 		req.removeAttribute(PERMS_PARAM_NAME);

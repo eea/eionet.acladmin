@@ -1,24 +1,8 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<%@ page import="java.util.Hashtable, java.util.Vector, java.util.HashMap, java.util.Iterator,
-		eionet.acl.utils.Util, eionet.acl.Names" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<%@ page import="java.util.Hashtable, java.util.Vector, java.util.HashMap, java.util.Iterator, eionet.acl.utils.Util, eionet.acl.Names" %>
 
 <%
-	//HashMap apps = (HashMap)session.getAttribute(Names.APPLICATIONS_ATT);
-	
-	//String thisAppName = (String)session.getAttribute(Names.APP_ATT);
-
-	//String err = (String)request.getAttribute(Names.ERROR_ATT);
-  //String ctx = request.getContextPath();
-
-  //Hashtable permissions = (Hashtable) request.getAttribute("PRMS");
-	//Hashtable groups = (Hashtable) request.getAttribute("GROUPS");
-
 	String aclName = request.getParameter("NAME");
-
-	//entry names for anonymous and auth access 
-	//String aUser =  (String)((HashMap)apps.get(thisAppName)).get("authUser");
-	//String uUser =  (String)((HashMap)apps.get(thisAppName)).get("unauthUser");
-
 %>
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
 <head>
@@ -32,29 +16,21 @@
 	}
 // ]]>
   </script>
-<%@ include file="menu.jsp" %>
 </head>
-
 <body>
-<div id="pagehead">
-<div id="identification">
-  <a href="/"><img src="images/logo.png" alt="Logo" id="logo" /></a>
-  <div class="sitetitle">Access Control List administration</div>
-  <div class="sitetagline">You change who can do what in Reportnet</div>
-</div>
 
-<div class="breadcrumbtrail">
-    <div class="breadcrumbhead">You are here:</div>
-    <div class="breadcrumbitem eionetaccronym"><a href="http://www.eionet.europa.eu">Eionet</a></div>
-    <div class="breadcrumbitem"><a href="javascript:openPage('<%=Names.SHOW_APPS_ACTION%>')">Applications</a></div>
-    <div class="breadcrumbitem"><a href="javascript:openPage('')"><%=thisAppName%></a></div>
-    <div class="breadcrumbitem"><a href="javascript:openPage('<%=Names.SHOW_GROUPS_ACTION%>')">Groups</a></div>
-    <div class="breadcrumbitemlast">Members</div>
-    <div class="breadcrumbtail"></div>
-</div>
-</div> <!-- pagehead -->
-
-<%@ include file="globalnav.jsp" %>
+<div id="container">
+	<%
+	Vector breadcrumbs = new Vector();
+	breadcrumbs.add("Applications|javascript:openPage('C')");
+	if (session.getAttribute(Names.APP_ATT)!=null)
+		breadcrumbs.add(session.getAttribute(Names.APP_ATT) + "|main?action=&amp;ACL=/");
+	breadcrumbs.add("Groups|javascript:openPage('Y')");
+	breadcrumbs.add(aclName==null ? "?" : aclName);
+    request.setAttribute("breadcrumbs", breadcrumbs);
+	%>
+    <jsp:include page="location.jsp" flush="true" />
+    <%@ include file="menu.jsp" %>
 <div id="workarea">
   <div id="operations">
     <ul>
@@ -69,59 +45,61 @@
 	<% } %>
 
   <h1>Localgroup Name: <%=aclName%></h1>
+  <br/>
   <table cellspacing="7" border="0">
   <tbody>
   <tr>
     <th>Member</th>
     <th>Delete</th>
   </tr>
-  <tr valign='top'>
+  <tr valign="top">
     <td>
-      <form name='add_member' action='main' method='post'>
-        <input name='MEMBER' type='text' />&nbsp;
-        <input type="submit" value="Add" title="Add user to localgroup"/>
-        <input value='<%=Names.MEMBER_ADD_ACTION%>' name='ACTION' type='hidden' />
-        <input value='<%=aclName%>' name='NAME' type='hidden' />
+      <form id="add_member" action="main" method="post">
+      	<div>
+	        <input name="MEMBER" type="text" />&nbsp;
+	        <input type="submit" value="Add" title="Add user to localgroup"/>
+	        <input value="<%=Names.MEMBER_ADD_ACTION%>" name="ACTION" type="hidden" />
+	        <input value="<%=aclName%>" name="NAME" type="hidden" />
+	    </div>
       </form>
     </td>
     <td></td>
   </tr>
-      <!-- members -->
-      <% 
-          int ii=0;
-          Vector members = (Vector)groups.get(aclName);
-          if (members != null)
-              for (Iterator i = members.iterator(); i.hasNext();) { 
-                  String name=(String)i.next();
-                  ii++;
-
-                  String fontColour;
-                  if ( (name.equals(aUser) || name.equals(uUser))  ) 
-                      fontColour = "#0000EE";
-                  else
-                      fontColour = "#646666";
-
-      %>
-  <tr>
-      <td><font color="<%=fontColour%>"><%=name%></font></td>
-      <td>
-          <form action='main' name='member_<%=ii%>' method='post'>
-            <img width='15' alt='Delete member from localgroup' src='images/delete.png' onclick='member_<%=ii%>.submit();' height='15' />
-            <input value='<%=Names.MEMBER_DEL_ACTION%>' name='ACTION' type='hidden' />
-            <input value='<%=name%>' name='MEMBER' type='hidden' />
-            <input value='<%=aclName%>' name='NAME' type='hidden' />
-          </form>
-      </td>
-
-  </tr>
-          <% }  %> 
+  
+	<!-- members -->
+      
+	<% 
+	Vector members = (Vector)groups.get(aclName);
+	for (int i=0; members!=null && i<members.size(); i++){
+	  
+		String name = (String)members.get(i);
+		String fontColour = name.equals(aUser) || name.equals(uUser) ? "#0000EE" : "#646666";
+		
+		StringBuffer delLink = new StringBuffer("main?ACTION=");
+		delLink.append(Names.MEMBER_DEL_ACTION).append("&amp;MEMBER=").append(name).append("&amp;NAME=").append(aclName);
+		%>
+		<tr>
+			<td style="color:<%=fontColour%>">
+				<%=name%>
+			</td>
+			<td>
+				<a href="<%=delLink.toString()%>">
+					<img src="images/delete.png" alt="Delete member from localgroup" height="15" width="15" />
+				</a>
+			</td>		
+		</tr><%
+	}
+	%> 
 
   </tbody>
   </table>
 
-  <form name="f" method="post" action="main">
-    <input type="hidden" name = "ACTION" value ="" />
+  <form id="f" method="post" action="main">
+  	<fieldset style="display:none">
+    	<input type="hidden" name = "ACTION" value ="" />
+    </fieldset>
   </form>
 </div> <!-- workarea -->
+</div> <!-- container -->
 </body>
 </html>

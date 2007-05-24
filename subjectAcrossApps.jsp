@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.Collator" %>
@@ -12,26 +12,6 @@
 	if (subjectType==null) subjectType = "";
 	if (subjectID==null) subjectID = "";
 	
-	/*	
-	if (resultHash==null || request.getParameter("refresh")!=null){
-		HashMap _apps = new HashMap();
-		HashMap _app = new HashMap();
-		//app.put("url", "http://dd.eionet.eu.int/rpcrouter");
-		_app.put("url", "http://localhost:8080/datadict/public/rpcrouter");
-		_apps.put("DataDict", _app);
-		_app = new HashMap(); 
-		_app.put("url", "http://rod.eionet.eu.int/rpcrouter");
-		_apps.put("ROD", _app);
-		
-		AcrossApps acrossApps = new AcrossApps(_apps, "heinlja", "hayland");
-		acrossApps.init();
-		Hashtable resultHash = acrossApps.getSubjectEntries("roug", "user");
-		session.setAttribute("result_hash", resultHash);
-	}
-	else{
-		System.out.println("Taking from cache!");
-	}
-	*/
 %>
 
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
@@ -57,26 +37,18 @@ function doLogin(appName) {
 
 // ]]>
 </script>
-<%@ include file="menu.jsp" %>
 </head>
+
 <body>
-
-<div id="pagehead">
-  <div id="identification">
-    <a href="/"><img src="images/logo.png" alt="Logo" id="logo" /></a>
-    <div class="sitetitle">Access Control List administration</div>
-    <div class="sitetagline">You change who can do what in Reportnet</div>
-  </div>
-
-  <div class="breadcrumbtrail">
-    <div class="breadcrumbhead">You are here:</div>
-    <div class="breadcrumbitem eionetaccronym"><a href="http://www.eionet.europa.eu">Eionet</a></div>
-    <div class="breadcrumbitemlast">Search across applications</div>
-    <div class="breadcrumbtail"></div>
-  </div>
-</div> <!-- pagehead -->
-
-<%@ include file="globalnav.jsp" %>
+<div id="container">
+<%
+Vector breadcrumbs = new Vector();
+breadcrumbs.add("Applications|javascript:openPage('C')");
+breadcrumbs.add("Search across applications");
+request.setAttribute("breadcrumbs", breadcrumbs);
+%>
+<jsp:include page="location.jsp" flush="true" />
+<%@ include file="menu.jsp" %>
 <div id="workarea">
 
 	<h1>Search across applications</h1>
@@ -103,7 +75,7 @@ function doLogin(appName) {
 		Collections.sort(appNames, Collator.getInstance());
 		%>
 		<table border="1" cellpadding="2">
-			<tr style="background-color:gray">
+			<tr style="background-color:#C0C0C0">
 				<th>Application</th>
 				<%
 				if (subjectType.equals("user")){
@@ -176,7 +148,7 @@ function doLogin(appName) {
 							<%
 							if (appDisplayed<1){
 								%>
-								<td rowspan="<%=strTotalAclEntries%>"><%=appName%></td>
+								<td valign="top" rowspan="<%=strTotalAclEntries%>"><strong><%=appName%></strong></td>
 								<%
 								if (subjectType.equals("user")){
 									%>
@@ -227,11 +199,13 @@ function doLogin(appName) {
 	%>
 	</div> <!-- workarea ends here -->
 	
-	<form name="f" action="main" method="post">
-		<input type="hidden" name="app" value="" />
-		<input type="hidden" name="ACTION" value="" />
-		<input type="hidden" name="ACL" value="" />
+	<form id="f" action="main" method="post">
+		<fieldset style="display:none">
+			<input type="hidden" name="app" value="" />
+			<input type="hidden" name="ACTION" value="" />
+			<input type="hidden" name="ACL" value="" />
+		</fieldset>
 	</form>
-
+</div> <!-- container -->
 </body>
 </html>

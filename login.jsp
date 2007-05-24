@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <%@ page import="eionet.acl.Names" %>
 
 <%
@@ -75,19 +75,25 @@ var picklist = new Array();
 // ]]>
 </script>
 </head>
+
 <body onload="setFocus()">
-	<% if (err!= null) { %>
+
+	<%
+	if (err!= null){ %>
         <div id="errormessage">
             <h1>Error!</h1>
             <p><%=err%></p>
-        </div>
-	<% } %>
-<br/><br/><br/><br/>
-<form name="f" action="main" method="post">
-	<input name="ACTION" type="hidden" value="<%=Names.LOGIN_ACTION%>" />
+        </div><%
+    }
+    %>
+    
+<form id="f" action="main" method="post">
+	<fieldset style="display:none">
+		<input name="ACTION" type="hidden" value="<%=Names.LOGIN_ACTION%>" />
+	</fieldset>
 	<table>
         <tr>
-          <td width='200'></td>
+          <td style="width:200"></td>
           <td>
             <b>UserName:</b>
           </td>
@@ -96,7 +102,7 @@ var picklist = new Array();
           </td>
         </tr>
         <tr>
-          <td width='200'></td>
+          <td style="width:200"></td>
           <td>
             <b>Password:</b>
           </td>
@@ -104,19 +110,19 @@ var picklist = new Array();
             <input name='j_passwd' type='password' />
           </td>
         </tr>
-        <tr height='30'>
-          <td colspan='3'></td>
+        <tr style="height:30">
+          <td colspan="3"></td>
         </tr>
         <tr>
-          <td width='200'></td>
+          <td style="width:200"></td>
           <td>
             <input value='OK' name='ok_btn' type='submit' />
           </td>
-        </td>
         <td>
           <input value='Cancel' name='cancel_btn' type='button' onclick='javascript:window.close()' />
         </td>
         </tr>
 	</table>
+</form>
 </body>
 </html>

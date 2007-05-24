@@ -1,6 +1,5 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<%@ page import="java.util.Hashtable, java.util.Vector, java.util.HashMap, java.util.Iterator,
-		eionet.acl.utils.Util, eionet.acl.Names" %>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<%@ page import="java.util.Hashtable, java.util.Vector, java.util.HashMap, java.util.Iterator,eionet.acl.utils.Util, eionet.acl.Names" %>
 
 <%
 
@@ -11,7 +10,7 @@
 	String aclType = request.getParameter("ACL_TYPE");
 
 	String aclName = (String)session.getAttribute(Names.ACL_ATT);
-
+	
 	Hashtable aclInfo =(Hashtable) request.getAttribute(Names.ACL_INFO_ATT); 
 	String aclDescr = (String)aclInfo.get("description");
 
@@ -36,13 +35,15 @@
 
 	}
 
-	//String aclPermissions = (String)correctHash.get(entryName);
-
 if (aclPermissions==null)
 	aclPermissions="";
 
-	if (! Util.isNullStr(aclPermissions))
-		aclPermissions = aclPermissions + ",";
+	if (!Util.isNullStr(aclPermissions)){
+		if (!aclPermissions.endsWith(","))
+			aclPermissions = aclPermissions + ",";
+		if (!aclPermissions.startsWith(","))
+			aclPermissions = "," + aclPermissions;
+	}
 
 
 %>
@@ -56,11 +57,11 @@ if (aclPermissions==null)
 function cP (o) {
 	var prm = o.value
 	if(o.checked)
-		document.forms["f"].PERMISSIONS.value += prm;
+		document.forms["f"].elements["PERMISSIONS"].value += prm;
 	else {
-		var i = document.forms["f"].PERMISSIONS.value.indexOf(prm);
+		var i = document.forms["f"].elements["PERMISSIONS"].value.indexOf(prm);
 		var lngth=o.value.length;
-		document.forms["f"].PERMISSIONS.value = document.forms["f"].PERMISSIONS.value.substring(0,i) + document.forms["f"].PERMISSIONS.value.substring(i+lngth);
+		document.forms["f"].elements["PERMISSIONS"].value = document.forms["f"].elements["PERMISSIONS"].value.substring(0,i) + document.forms["f"].elements["PERMISSIONS"].value.substring(i+lngth);
 	}
 
 }
@@ -73,28 +74,21 @@ function openPage(action) {
 // ]]>
 </script>
 
-<%@ include file="menu.jsp" %>
 </head>
 <body>
-<div id="pagehead">
-  <div id="identification">
-    <a href="/"><img src="images/logo.png" alt="Logo" id="logo" /></a>
-    <div class="sitetitle">Access Control List administration</div>
-    <div class="sitetagline">You change who can do what in Reportnet</div>
-  </div>
-
-  <div class="breadcrumbtrail">
-    <div class="breadcrumbhead">You are here:</div>
-    <div class="breadcrumbitem eionetaccronym"><a href="http://www.eionet.europa.eu">Eionet</a></div>
-    <div class="breadcrumbitem"><a href="javascript:openPage('<%=Names.SHOW_APPS_ACTION%>')">Applications</a></div>
-    <div class="breadcrumbitem"><a href="main"><%=thisAppName%></a></div>
-    <div class="breadcrumbitemlast">Permissions</div>
-    <div class="breadcrumbtail"></div>
-  </div>
-</div> <!-- pagehead -->
-
-<%@ include file="globalnav.jsp" %>
-
+<div id="container">
+	<%
+	Vector breadcrumbs = new Vector();
+	breadcrumbs.add("Applications|javascript:openPage('C')");
+	if (session.getAttribute(Names.APP_ATT)!=null)
+		breadcrumbs.add(session.getAttribute(Names.APP_ATT) + "|main?action=&amp;ACL=/");
+	if (aclName!=null)
+		breadcrumbs.add((aclName.equals("/") ? "/root_level" : aclName) + "|main?action=&amp;ACL=" + aclName);
+	breadcrumbs.add("Permissions");
+    request.setAttribute("breadcrumbs", breadcrumbs);
+	%>
+    <jsp:include page="location.jsp" flush="true" />
+    <%@ include file="menu.jsp" %>
 <div id="workarea">
   <div id="operations">
     <ul>
@@ -102,36 +96,44 @@ function openPage(action) {
     </ul>
   </div>
   <h1>Permissions</h1>
+  
+  <br/>
+  
   <table>
   <tr>
-      <th>ACL Entry Name</th><td><%=entryName%></td>
+      <th style="text-align:right">ACL Entry Name:</th><td><%=entryName%></td>
   </tr>
   <tr>
-      <th>ACL Entry Type</th><td><%=aclType%></td>
+      <th style="text-align:right">ACL Entry Type:</th><td><%=aclType%></td>
   </tr>
   <tr>
-      <th>ACL Name</th><td><em><%=aclDescr%></em></td>
+      <th style="text-align:right">ACL Name:</th><td><em><%=aclDescr%></em></td>
   </tr>
   </table>
-
+  
+	<br/>
+	
   <table cellspacing="7">
     <thead>
     <tr>
-      <th width="10"></th>
+      <th style="width:10"></th>
       <th>Permission</th>
       <th>Description</th>
     </tr>
     </thead>
     <tbody>
         <!-- permissions -->
-        <% for (Iterator i = permissions.keySet().iterator(); i.hasNext();) { 
-           String name = (String)i.next();
+        <%
+        for (Iterator i = permissions.keySet().iterator(); i.hasNext();){ 
+	        
+			String name = (String)i.next();
 
-                 String prmDesc = (String)permissions.get(name);
-                 String chkValue=name+",";
+			String prmDesc = (String)permissions.get(name);
+			String chkValue = "," + name + ",";
 
-                 boolean hasPrm = aclPermissions.indexOf(name) != -1;
-                 String chkChecked = (hasPrm ? "checked='checked'" : "");
+            boolean hasPrm = aclPermissions.indexOf(chkValue) != -1;
+            
+            String chkChecked = (hasPrm ? "checked=\"checked\"" : "");
         %>
     <tr valign="top">
       <td><input onclick="cP(this)" type="checkbox" value="<%=chkValue%>" name="<%=name%>" <%=chkChecked %> /></td>
@@ -142,13 +144,16 @@ function openPage(action) {
     </tbody>
   </table>
 
-  <form name="f" method="post" action="main">
-    <input type="hidden" name="ACTION" value="<%=Names.SAVE_PERMS_ACTION%>"/>
-    <input type="hidden" name="TYPE" value="<%=aclEntryType%>"/>
-    <input type="hidden" name="NAME" value="<%=entryName%>"/>
-    <input type="hidden" name="PERMISSIONS" value="<%=aclPermissions%>"/>
-    <input type="hidden" name="ACL_TYPE" value="<%=aclType%>"/>
+  <form id="f" method="post" action="main">
+  	<fieldset style="display:none">
+	    <input type="hidden" name="ACTION" value="<%=Names.SAVE_PERMS_ACTION%>"/>
+	    <input type="hidden" name="TYPE" value="<%=aclEntryType%>"/>
+	    <input type="hidden" name="NAME" value="<%=entryName%>"/>
+	    <input type="hidden" name="PERMISSIONS" value="<%=aclPermissions%>"/>
+	    <input type="hidden" name="ACL_TYPE" value="<%=aclType%>"/>
+	</fieldset>
   </form>
 </div> <!-- workarea -->
+</div> <!-- container -->
 </body>
 </html>
