@@ -106,16 +106,16 @@ request.setAttribute("breadcrumbs", breadcrumbs);
                     <table>
                     	<tr valign="top">
 		                    <td>
-		                    	<a href="<%=delLink.toString()%>">
-		                        	<img width="15" alt="Delete localgroup" src="images/delete.png" height="15"/>
+		                    	<a href="<%=delLink.toString()%>" title="Delete localgroup">
+		                        	<img alt="Delete localgroup" src="images/delete.gif" height="13" width="13" />
 		                        </a>
 		                    </td>
 		                    <td style="width:100">
 		                    	<%=name%>
 		                    </td>
 		                    <td>
-		                    	<a href="<%=editLink.toString()%>">
-		                        	<img width="15" alt="Edit localgroup" src="images/edit.png" height="15"/>
+		                    	<a href="<%=editLink.toString()%>" title="Edit localgroup">
+		                        	<img alt="Edit localgroup" src="images/edit.gif" height="13" width="13" />
 		                        </a>
 		                    </td>
                     	</tr>

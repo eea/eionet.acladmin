@@ -83,8 +83,8 @@
 				<%=name%>
 			</td>
 			<td>
-				<a href="<%=delLink.toString()%>">
-					<img src="images/delete.png" alt="Delete member from localgroup" height="15" width="15" />
+				<a href="<%=delLink.toString()%>" title="Delete member from localgroup">
+					<img src="images/delete.gif" alt="Delete member from localgroup" height="13" width="13" />
 				</a>
 			</td>		
 		</tr><%

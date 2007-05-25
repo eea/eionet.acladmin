@@ -182,12 +182,17 @@ request.setAttribute("breadcrumbs", breadcrumbs);
     	if (!selAcl.equals("")){
 	    	%>
     		<table width="100%" border="0" cellspacing="0">
+						<col style="width:15%"/>
+						<col style="width:10%"/>
+						<col style="width:20%"/>
+						<col style="width:35%"/>
+						<col style="width:15%"/>
 		        <tr>
-		            <th style="width:15%">ACL Type</th>
-		            <th style="width:10%">Type</th>
-		            <th style="width:20%">Subject</th>
-		            <th style="width:35%">Permissions</th>
-		            <th style="width:15%"></th>
+		            <th>ACL Type</th>
+		            <th>Type</th>
+		            <th>Subject</th>
+		            <th>Permissions</th>
+		            <th></th>
 		        </tr>        
         		<%
         		if (isOwner){
@@ -272,13 +277,13 @@ request.setAttribute("breadcrumbs", breadcrumbs);
 											delLink.append(Names.ACL_DEL_ACTION).append("&amp;NAME=").append(id).append("&amp;TYPE=").append(type).append("&amp;ACL_TYPE=").append(aclType);
 
 											%>
-											<a href="<%=showLink.toString()%>">
-												<img height="15" width="15" src="images/edit.png" alt="Modify permissions" style="border: thin #000000"/>
+											<a href="<%=showLink.toString()%>" title="Modify permissions">
+												<img height="13" width="13" src="images/edit.gif" alt="Modify permissions"/>
 											</a>
 											</td>
 											<td>
-												<a href="<%=delLink.toString()%>">
-													<img height="15" width="15" src="images/delete.png" alt="Delete entry from ACL" style="border: thin #000000"/>
+												<a href="<%=delLink.toString()%>" title="Delete entry from ACL">
+													<img height="13" width="13" src="images/delete.gif" alt="Delete entry from ACL"/>
 												</a><%
 										}
 										%>
