@@ -16,7 +16,7 @@
 </div> <!-- toolribbon -->
 
 <div id="pagehead">
-        <a href="/"><img src="images/eealogo.gif" alt="Logo" id="logo" /></a>
+        <a href="/"><img src="images/eea-print-logo.gif" alt="Logo" id="logo" /></a>
         <div id="networktitle">Eionet</div>
         <div id="sitetitle">Access Control List administration</div>
         <div id="sitetagline">You change who can do what in Reportnet</div>
