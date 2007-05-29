@@ -163,5 +163,6 @@ request.setAttribute("breadcrumbs", breadcrumbs);
 
 </div> <!-- workarea -->
 </div> <!-- container -->
+<%@ include file="footer.jsp" %>
 </body>
 </html>

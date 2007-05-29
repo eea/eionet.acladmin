@@ -155,5 +155,6 @@ function openPage(action) {
   </form>
 </div> <!-- workarea -->
 </div> <!-- container -->
+<%@ include file="footer.jsp" %>
 </body>
 </html>

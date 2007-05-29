@@ -207,5 +207,6 @@ request.setAttribute("breadcrumbs", breadcrumbs);
 		</fieldset>
 	</form>
 </div> <!-- container -->
+<%@ include file="footer.jsp" %>
 </body>
 </html>
