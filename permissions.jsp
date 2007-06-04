@@ -115,11 +115,10 @@ function openPage(action) {
 	
   <table cellspacing="7">
     <thead>
-    <tr>
-      <th style="width:10"></th>
-      <th>Permission</th>
-      <th>Description</th>
-    </tr>
+	    <tr>
+	      <th>Permission</th>
+	      <th>Description</th>
+	    </tr>
     </thead>
     <tbody>
         <!-- permissions -->
@@ -134,13 +133,17 @@ function openPage(action) {
             boolean hasPrm = aclPermissions.indexOf(chkValue) != -1;
             
             String chkChecked = (hasPrm ? "checked=\"checked\"" : "");
-        %>
-    <tr valign="top">
-      <td><input onclick="cP(this)" type="checkbox" value="<%=chkValue%>" name="<%=name%>" <%=chkChecked %> /></td>
-      <td><%=name%></td>
-      <td><strong><%=prmDesc%></strong></td>
-    </tr>
-        <% }  %> 
+        	%>
+		    <tr valign="top">
+		      <td>
+		      	<input onclick="cP(this)" type="checkbox" value="<%=chkValue%>" name="<%=name%>" id="<%=name%>" <%=chkChecked%>/><label for="<%=name%>" title="<%=prmDesc%>"><%=name%></label>
+		      </td>
+		      <td>
+		      	<strong><%=prmDesc%></strong>
+		      </td>
+		    </tr><%
+		}
+		%> 
     </tbody>
   </table>
 

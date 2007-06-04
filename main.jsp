@@ -220,13 +220,14 @@ request.setAttribute("breadcrumbs", breadcrumbs);
 		                </td>
 		                <td class="bordertop borderleft borderbottom" >
 		                        <input type="hidden" size="20" name="PERMISSIONS" />
-		                        <% for (Iterator i = permissions.keySet().iterator(); i.hasNext();) { 
-		                                 String name = (String)i.next();
-		                                 String prmDesc = (String)permissions.get(name);
-		                        %>
-		                            <span title="<%=prmDesc%>"><input onclick="cP(this)" type="checkbox" value="<%=name + ','%>" name="<%=name%>" /><%=name%></span>
-		                        <% }  %> 
-		                        &nbsp;
+		                        <%
+		                        for (Iterator i = permissions.keySet().iterator(); i.hasNext();){ 
+	                                String name = (String)i.next();
+	                                String prmDesc = (String)permissions.get(name);
+		                        	%>
+		                        	<input onclick="cP(this)" type="checkbox" value="<%=name + ','%>" name="<%=name%>" id="<%=name%>"/><label for="<%=name%>" title="<%=prmDesc%>"><%=name%></label><%
+		                        }
+		                        %>&nbsp;
 		                </td>
 		                <td class="borderright bordertop borderleft borderbottom" >
 		                    <input type="submit" value="Add" title="Add entry to ACL"/>

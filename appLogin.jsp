@@ -16,34 +16,30 @@ else {
 <title>User Authentication</title>
 <script type="text/javascript">
 // <![CDATA[
-function fillFields() {
-			var wl=window.location.toString();
 
-		  var pos=wl.indexOf("?app=");
+	function fillFields(){
+		
+		var wl=window.location.toString();
+		var pos=wl.indexOf("?app=");
+		if (pos>=0){
 			pos = pos+5;
 			var appName = wl.substr(pos);
-
-			var t = document.forms["l"].elements["app"];
-
-			t.value=appName;
-
-			t=document.getElementById("app_user");
-			t.focus();
-
+			if (appName!=null && appName.length>0)
+				document.forms["l"].elements["app"].value = appName;
 		}
+		
+		var t = document.forms["l"].elements["app_user"];
+		if (t)
+			t.focus();
+	}
 
 
 	function resetForm(){
-		if (document.all){
-			document.all('l').reset();
-		}
-		else{
-			document.forms["l"].reset();
-		}
+		document.forms["l"].reset();
 
-		t=document.getElementById("app_user");
-		t.focus();
-
+		var t = document.forms["l"].elements["app_user"];
+		if (t)
+			t.focus();
 	}
 
 	function keyDown(keyCode){
@@ -68,11 +64,11 @@ function fillFields() {
 	
 		<tr>
 			<th>Username:</th>
-	        <th align='right'><input size='25' type='text' name='app_user'/></th>
+	        <th align="right"><input size="25" type="text" name="app_user" id="app_user"/></th>
 		</tr>
 		<tr>
 			<th >Password:</th>
-	                <th align='right'><input size='25' type='password' name='app_pwd' onkeydown='javascript:keyDown(event.keyCode)'/></th>
+	                <th align="right"><input size="25" type="password" name="app_pwd" onkeydown="javascript:keyDown(event.keyCode)"/></th>
 		</tr>
 		<tr><td align="right" colspan="2">
 			<input name="SUBMIT" type="submit" value="Login" /></td>
