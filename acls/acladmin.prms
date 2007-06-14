@@ -1,9 +1,9 @@
 a:Add
-r:Read
-d:Delete
-w:Update
 c:Control ACL
-p9:test p9
-p4:p4 test permission
+d:Delete
 i:Insert
+r:Read
+u:Update
+v:View
 x:Execute
+w:Write
