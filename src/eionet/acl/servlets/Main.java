@@ -108,13 +108,21 @@ public class Main extends BaseAC implements Names {
 		}
 		
 		//check if session exist, if not redirect to login page
-		if (!guard(sess)) {
-			if (isAllowed(null)){
-				doLogin(req,res);
-				action=SHOW_APPS_ACTION;
+		if (!guard(sess)){
+			String errMsg = null;
+			try{
+				if (isAllowed(null)){
+					doLogin(req,res);
+					action=SHOW_APPS_ACTION;
+				}
+				else
+					errMsg = "Not allowed";
 			}
-			else {
-				handleError(req,res, "No session ", LOGIN_ACTION );
+			catch (Exception e){
+				errMsg = e.toString();
+			}
+			if (errMsg!=null){
+				handleError(req,res, errMsg, LOGIN_ACTION);
 				return;
 			}
 		}    

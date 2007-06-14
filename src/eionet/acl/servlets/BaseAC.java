@@ -320,24 +320,20 @@ public abstract class BaseAC extends HttpServlet {
 	 * 
 	 * @param userName
 	 * @return
+	 * @throws SignOnException 
 	 */
-	protected boolean isAllowed(String userName){
-		try{
-			if (acls==null)
-				acls = AccessController.getAcls();   
-			
-			AccessControlListIF aclAdminAcl = (AccessControlListIF)acls.get(ACL_appAclName);
-			
-			//to use AclAdmin the user has to have read permission in '/' ACL of AClAdmin tool
-			if (aclAdminAcl == null)
-				throw new SignOnException("No root Acl found: " + ACL_appAclName);
-			
-			return aclAdminAcl.checkPermission(userName, ACL_readPermission );
-		}
-		catch (SignOnException soe){
-			soe.printStackTrace(System.out);
-			return false;
-		}
+	protected boolean isAllowed(String userName) throws SignOnException{
+		
+		if (acls==null)
+			acls = AccessController.getAcls();   
+		
+		AccessControlListIF rootAcl = (AccessControlListIF)acls.get(ACL_appAclName);
+		
+		// to use AclAdmin the user has to have read permission in root ACL (but only if the latter is present)
+		if (rootAcl!=null)
+			return rootAcl.checkPermission(userName, ACL_readPermission );
+		else
+			return true;
 	}
 	
 	/**
