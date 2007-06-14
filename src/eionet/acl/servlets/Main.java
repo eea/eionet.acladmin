@@ -108,15 +108,13 @@ public class Main extends BaseAC implements Names {
 		}
 		
 		//check if session exist, if not redirect to login page
-		if ( !guard(sess)) {
-			if (isAllowed(null)) {
-				//l("doLogin");        
+		if (!guard(sess)) {
+			if (isAllowed(null)){
 				doLogin(req,res);
-				//l("Login ok");                  
 				action=SHOW_APPS_ACTION;
 			}
 			else {
-				handleError(req,res, "No session", LOGIN_ACTION );
+				handleError(req,res, "No session ", LOGIN_ACTION );
 				return;
 			}
 		}    
