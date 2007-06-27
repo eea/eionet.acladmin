@@ -283,7 +283,7 @@ request.setAttribute("breadcrumbs", breadcrumbs);
 											</a>
 											</td>
 											<td>
-												<a href="<%=delLink.toString()%>" title="Delete entry from ACL">
+												<a href="<%=delLink.toString()%>" title="Delete entry from ACL" onclick="return confirm('Are you sure you want to delete this entry? The subject will lose the given permissions!');">
 													<img height="13" width="13" src="images/delete.gif" alt="Delete entry from ACL"/>
 												</a><%
 										}

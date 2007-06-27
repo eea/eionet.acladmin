@@ -106,7 +106,7 @@ request.setAttribute("breadcrumbs", breadcrumbs);
                     <table>
                     	<tr valign="top">
 		                    <td>
-		                    	<a href="<%=delLink.toString()%>" title="Delete localgroup">
+		                    	<a href="<%=delLink.toString()%>" title="Delete localgroup" onclick="return confirm('Are you sure you want to delete this group? This will remove the group from all access control lists!');">
 		                        	<img alt="Delete localgroup" src="images/delete.gif" height="13" width="13" />
 		                        </a>
 		                    </td>
