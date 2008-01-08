@@ -152,8 +152,6 @@ public class SaveHandler {
 			
 			if (Util.isNullStr(entryName))
 				req.setAttribute(Names.ERROR_ATT, "Subject cannot be empty.");
-			else if (aclPerms==null || aclPerms.trim().length()==0)
-				req.setAttribute(Names.ERROR_ATT, "At least one permission must be defined!");
 			else if (acl!=null) 
 				req.setAttribute(Names.ERROR_ATT, "The entry already exists in the ACL.");      
 			else if (entryName.equals("owner") && aclType.equals("object"))
@@ -247,8 +245,6 @@ public class SaveHandler {
             String perms = (String)entry.get("perms");
             if (id==null || id.trim().length()==0)
             	throw new Exception("There is an entry taht is missing the Subject");
-            if (perms==null || perms.trim().length()==0)
-            	throw new Exception("The entry with Subject='" + id + "' is missing permission(s)");
 		}
 	}
 }
