@@ -41,7 +41,7 @@ request.setAttribute("breadcrumbs", breadcrumbs);
 	if (err!= null){ %>
         <div id="errormessage">
             <h1>Error!</h1>
-            <p><%=err%></p>
+            <p><%=eionet.acl.utils.Util.replaceTags(err)%></p>
         </div><%
     }
     %>
