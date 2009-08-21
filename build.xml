@@ -46,6 +46,8 @@
 			<fileset dir="${basedir}/webapp/WEB-INF/classes"/>
 			<globmapper from="*" to="*.dist"/>
 		</copy>
+		<copy file="${basedir}/webapp/WEB-INF/classes/uit.properties" todir="${classes.dir}"/>
+		<replace file="${classes.dir}/uit.properties" token="@APP.HOME@" value="${app.home}"/>
 		<copy todir="${app.home}/acls" overwrite="true">
 			<fileset dir="acls"/>
 			<globmapper from="*" to="*.dist"/>
@@ -69,13 +71,6 @@
 			</manifest>
 		</jar>
 		<delete dir="${build}/eionet"/>
-	</target>
-
-	<target name="cp_props">
-		<echo message="webapp-home: ${webapp.home}"/>
-		<copy file="${src}/uit.properties" todir="${classes.dir}"/>
-		<copy file="${src}/acladmin.properties" todir="${classes.dir}"/>
-		<replace file="${classes.dir}/uit.properties" token="@APP.HOME@" value="${app.home}"/>
 	</target>
 
 	<!-- define classpath for unit tests -->
