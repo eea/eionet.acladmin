@@ -1,14 +1,17 @@
-<project name="acladmin" default="compile" basedir=".">
+<project name="acladmin" default="install" basedir=".">
 
 	<!-- global properties for this build -->
-	<property name="src" value="../src"/>
-	<property name="classes" value="../WEB-INF/classes"/>
-	<property name="lib" value="../WEB-INF/lib"/>
-	<property name="test" value="../test"/>
+	<property name="src" value="src"/>
+	<property file="${basedir}/build.properties" />
+	<property name="classes" value="${basedir}/build/classes"/>
+	<property name="classes.dir" value="${webapp.home}/WEB-INF/classes"/>
+	<property name="lib" value="${basedir}/webapp/WEB-INF/lib"/>
+	<property name="lib" value="${webapp.home}/WEB-INF/lib"/>
+	<property name="test" value="test"/>
 
 	<!-- define external classpath, i.e. JARs and classes not found in WEB-INF/classes and WEB-INF/lib -->
 	<path id="classpath.externals">
- 		<pathelement location="/var/lib/tomcat5/common/lib/[servlet].jar"/>
+		<pathelement location="${lib-servlet-jar}"/>
 	</path>
 
 	<!-- define classpath for compile -->
@@ -19,8 +22,40 @@
 		<path refid="classpath.externals"/>
 	</path>
 
+        <target name="prepare">
+                <condition property="build.properties.exists">
+                        <available file="build.properties" />
+                </condition>
+
+                <fail unless="build.properties.exists"
+                    message="Couldn't find build.properties file! Make a copy from default.properties and rename it to build.properties. Modify properties, if needed."/>
+        </target>
+
+        <target name="install"  depends="buildjar">
+                <mkdir dir="${app.home}" />
+                <!-- Create directories as needed -->
+                <mkdir dir="${webapp.home}"/>
+                <copy todir="${webapp.home}" overwrite="true">
+                        <fileset dir="webapp">
+                                <exclude name="**/*.properties"/>
+                        </fileset>
+                </copy>
+
+		<echo message="webapp-home: ${webapp.home}"/>
+		<copy todir="${classes.dir}" overwrite="true">
+			<fileset dir="${basedir}/webapp/WEB-INF/classes"/>
+			<globmapper from="*" to="*.dist"/>
+		</copy>
+		<copy todir="${app.home}/acls" overwrite="true">
+			<fileset dir="acls"/>
+			<globmapper from="*" to="*.dist"/>
+		</copy>
+        </target>
+
+
+
 	<!-- compile target, refers to pre-defined paths -->
-	<target name="compile">
+	<target name="compile" depends="prepare">
 		<javac srcdir="${src}" destdir="${classes}" source="1.5" target="1.5" debug="on">
 			<classpath refid="classpath.compile"/>
 		</javac>
@@ -34,6 +69,13 @@
 			</manifest>
 		</jar>
 		<delete dir="${build}/eionet"/>
+	</target>
+
+	<target name="cp_props">
+		<echo message="webapp-home: ${webapp.home}"/>
+		<copy file="${src}/uit.properties" todir="${classes.dir}"/>
+		<copy file="${src}/acladmin.properties" todir="${classes.dir}"/>
+		<replace file="${classes.dir}/uit.properties" token="@APP.HOME@" value="${app.home}"/>
 	</target>
 
 	<!-- define classpath for unit tests -->

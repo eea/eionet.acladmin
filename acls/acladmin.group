@@ -1,2 +1,16 @@
-admin:roug,lainekai
-users:tennoan
+<?xml version="1.0" encoding="UTF-8"?>
+<localgroups>
+<group id="admin">
+<member userid="roug"/>
+<member userid="herreman"/>
+<member userid="colpaja"/>
+<member userid="panidthe"/>
+<member userid="bohetce"/>
+<member userid="heinlja"/>
+</group>
+<group id="users">
+<member userid="tennoan"/>
+<member userid="peifer"/>
+<member userid="jensen"/>
+</group>
+</localgroups>

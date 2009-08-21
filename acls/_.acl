@@ -1,3 +1,30 @@
-description:AclAdminTool:
-user:lainekai:c,r
-user:roug:c,r
+<?xml version="1.0" encoding="UTF-8"?>
+<acl description="AclAdminTool">
+  <entries>
+    <entry type="object">
+      <principal id="roug" type="user"/>
+      <permissions>
+        <permission id="c"/>
+        <permission id="r"/>
+      </permissions>
+    </entry>
+    <entry type="object">
+      <principal id="authenticated" type="user"/>
+      <permissions>
+        <permission id="r"/>
+      </permissions>
+    </entry>
+    <entry type="object">
+      <principal id="anonymous" type="user"/>
+      <permissions>
+        <permission id="r"/>
+      </permissions>
+    </entry>
+    <entry type="object">
+      <principal id="users" type="localgroup"/>
+      <permissions>
+        <permission id="r"/>
+      </permissions>
+    </entry>
+  </entries>
+</acl>
