@@ -61,7 +61,7 @@ public abstract class BaseAC extends HttpServlet {
     private ResourceBundle props;
 
     protected HashMap apps;
-    protected HashMap appClients; //holds ServiceClients (RPC clients )
+    protected HashMap appClients; //holds ServiceClients (RPC clients)
 
     protected final String ACL_readPermission = "r";
     protected final String ACL_appAclName = "/";
@@ -74,17 +74,17 @@ public abstract class BaseAC extends HttpServlet {
     /*protected boolean xisLogged(HttpServletRequest req) {
      boolean ok = false;
      session = getSession(req);
-     if ( session != null && session.getAttribute( Names.USER_ATT ) != null ) {
-     ok = true;
+     if (session != null && session.getAttribute(Names.USER_ATT) != null) {
+         ok = true;
      }
-     return ok;
+         return ok;
      } */
 
     /**
      * returns the current Http session.
      */
-    protected HttpSession getSession(HttpServletRequest req ) {
-        session = (HttpSession)req.getAttribute(Names.SESS_ATT);
+    protected HttpSession getSession(HttpServletRequest req) {
+        session = (HttpSession) req.getAttribute(Names.SESS_ATT);
         return session;
     }
 
@@ -104,12 +104,12 @@ public abstract class BaseAC extends HttpServlet {
     /**
      * doGet().
      */
-    public abstract void doGet( HttpServletRequest req, HttpServletResponse res ) throws ServletException, IOException ;
+    public abstract void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException ;
 
     /**
      * dpPost().
      */
-    public abstract void doPost( HttpServletRequest req, HttpServletResponse res ) throws ServletException, IOException;
+    public abstract void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException;
 
     /**
      * Login to AclAdmin.
@@ -126,24 +126,24 @@ public abstract class BaseAC extends HttpServlet {
             //DirectoryService.sessionLogin(u, p);
             AppUser aclUser = new AppUser();
 
-            if(!Util.isNullStr(u))
-                aclUser.authenticate(u,p);
+            if (!Util.isNullStr(u))
+                aclUser.authenticate(u, p);
 
             //Check, if the user has permission to use the AclAdmin Tool
             //acls = AccessController.getAcls();
 
-            //AccessControlListIF aclAdminAcl = (AccessControlListIF)acls.get(ACL_appAclName);
+            //AccessControlListIF aclAdminAcl = (AccessControlListIF) acls.get(ACL_appAclName);
 
             //boolean isAllowed=false;
 
 
             /*
              if (aclAdminAcl != null)
-             isAllowed = aclAdminAcl.checkPermission(u,ACL_readPermission );
+             isAllowed = aclAdminAcl.checkPermission(u,ACL_readPermission);
              else
              throw new ServletException("No root Acl found: " + ACL_appAclName);
              */
-            if ( !isAllowed(u))
+            if (!isAllowed(u))
                 throw new ServletException("Not allowed to use the Acl Admin tool");
 
 
@@ -153,7 +153,7 @@ public abstract class BaseAC extends HttpServlet {
                 String appNames = null;
                 try {
                     appNames = getProperty("applications");
-                } catch (MissingResourceException me ) {
+                } catch (MissingResourceException me) {
                     throw new Exception("AppNames property does not exist in acladmin.properties");
                 }
                 if (Util.isNullStr(appNames))
@@ -166,7 +166,7 @@ public abstract class BaseAC extends HttpServlet {
             session.setAttribute(Names.APPLICATIONS_ATT, apps);
             session.setAttribute(Names.APPCLIENTS_ATT, new HashMap());  //clients remains empty at init phase
 
-        } catch (Exception dire ) {
+        } catch (Exception dire) {
 
             session.setAttribute(Names.USER_ATT, null);
             session.setAttribute(Names.APPLICATIONS_ATT, null);
@@ -200,7 +200,7 @@ public abstract class BaseAC extends HttpServlet {
             jspName = Names.INDEX_JSP;
         }
 
-        req.getRequestDispatcher(jspName).forward(req,res);
+        req.getRequestDispatcher(jspName).forward(req, res);
 
     }
 
@@ -211,17 +211,17 @@ public abstract class BaseAC extends HttpServlet {
         try {
             HttpSession session = getSession(req);
 
-            if ( session == null)
+            if (session == null)
                 throw new SecurityException ("No session ");
 
-            AppUser aclUser = (AppUser)session.getAttribute(Names.USER_ATT);
+            AppUser aclUser = (AppUser) session.getAttribute(Names.USER_ATT);
 
             if (aclUser == null)
                 throw new SecurityException ("No user ");
             else if (aclUser.getUserName() == null)
                 throw new SecurityException ("No user name ");
 
-        } catch (SecurityException e ) {
+        } catch (SecurityException e) {
             if (session != null) {
                 session.setAttribute(Names.USER_ATT, null);
                 session.setAttribute(Names.APPLICATIONS_ATT, null);
@@ -260,7 +260,7 @@ public abstract class BaseAC extends HttpServlet {
         }
     }
 
-    protected static void l(String s ) {
+    protected static void l(String s) {
         System.out.println("========================================================================");
         System.out.println(s);
         System.out.println("========================================================================");
@@ -273,9 +273,9 @@ public abstract class BaseAC extends HttpServlet {
         String appName = req.getParameter("app");
 
         HttpSession session = req.getSession();
-        HashMap apps = (HashMap)session.getAttribute(Names.APPLICATIONS_ATT);
-        appClients = (HashMap)session.getAttribute(Names.APPCLIENTS_ATT);
-        String appUrl  = (String) ((HashMap)apps.get(appName)).get("url");
+        HashMap apps = (HashMap) session.getAttribute(Names.APPLICATIONS_ATT);
+        appClients = (HashMap) session.getAttribute(Names.APPCLIENTS_ATT);
+        String appUrl  = (String) ((HashMap) apps.get(appName)).get("url");
 
         String u = req.getParameter("app_user");
         String p = req.getParameter("app_pwd");
@@ -286,20 +286,20 @@ public abstract class BaseAC extends HttpServlet {
             ServiceClientIF appClient = ServiceClients.getServiceClient(Names.RPC_SERVICE_NAME, appUrl);
 
             if (!Util.isNullStr(u))
-                appClient.setCredentials(u,p);
+                appClient.setCredentials(u, p);
 
             //if authentication succeeded, rpcClient is put to hash, so there is no need to login later
             //if the session is alive
             appClients.put(appName, appClient);
             //l("put appClients=" + appName);
 
-        } catch (Exception e ) {
+        } catch (Exception e) {
             throw new ServletException("Error initializing service client for " + appName + " " + e.toString());
         }
 
         req.setAttribute(Names.SESS_ATT, session);
-        printPage(res, "<html><script type=\"text/javascript\">window.opener.location='main?app=" +
-                appName + "';window.close()</script></html>");
+        printPage(res, "<html><script type=\"text/javascript\">window.opener.location='main?app="
+                + appName + "';window.close()</script></html>");
     }
 
     /**
@@ -327,11 +327,11 @@ public abstract class BaseAC extends HttpServlet {
         if (acls == null)
             acls = AccessController.getAcls();
 
-        AccessControlListIF rootAcl = (AccessControlListIF)acls.get(ACL_appAclName);
+        AccessControlListIF rootAcl = (AccessControlListIF) acls.get(ACL_appAclName);
 
         // to use AclAdmin the user has to have read permission in root ACL (but only if the latter is present)
         if (rootAcl != null)
-            return rootAcl.checkPermission(userName, ACL_readPermission );
+            return rootAcl.checkPermission(userName, ACL_readPermission);
         else
             return true;
     }
@@ -360,7 +360,7 @@ public abstract class BaseAC extends HttpServlet {
         if (session == null)
             throw new Exception("No session found in request");
 
-        AcrossApps acrossApps = (AcrossApps)session.getAttribute(Names.ATT_ACROSS_APPS);
+        AcrossApps acrossApps = (AcrossApps) session.getAttribute(Names.ATT_ACROSS_APPS);
         if (acrossApps == null) {
             String usr = req.getParameter(Names.PRM_ACROSS_APPS_USERNAME);
             String psw = req.getParameter(Names.PRM_ACROSS_APPS_PASSWORD);
@@ -400,6 +400,6 @@ public abstract class BaseAC extends HttpServlet {
         if (dispatcher == null)
             throw new Exception("getRequestDispatcher(" + jspName + ") returned null");
 
-        dispatcher.forward(req,res);
+        dispatcher.forward(req, res);
     }
 }
