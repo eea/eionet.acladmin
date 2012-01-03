@@ -48,24 +48,24 @@ public class SaveHandler {
      */
     static void callRemoteMethod(HttpServletRequest req, String action) throws ServiceClientException  {
 
-        HttpSession sess = (HttpSession)req.getAttribute(Names.SESS_ATT);
-        String appName = (String)sess.getAttribute(Names.APP_ATT);
-        HashMap appClients = (HashMap)sess.getAttribute(Names.APPCLIENTS_ATT);
+        HttpSession sess = (HttpSession) req.getAttribute(Names.SESS_ATT);
+        String appName = (String) sess.getAttribute(Names.APP_ATT);
+        HashMap appClients = (HashMap) sess.getAttribute(Names.APPCLIENTS_ATT);
 
-        ServiceClientIF client = (ServiceClientIF)appClients.get(appName);
+        ServiceClientIF client = (ServiceClientIF) appClients.get(appName);
         Vector prms = new Vector();
 
         String methodName = null;
 
         //call correct XML/RPC method
-        if (action.equals( Names.SAVE_GROUPS_ACTION)) {
-            Hashtable groups = (Hashtable)req.getAttribute(Names.GROUPS_PARAM_NAME);
+        if (action.equals(Names.SAVE_GROUPS_ACTION)) {
+            Hashtable groups = (Hashtable) req.getAttribute(Names.GROUPS_PARAM_NAME);
             prms.add(groups);
             methodName = "setLocalGroups";
-        } else if (action.equals( Names.ACL_SAVE_ACTION)) {
+        } else if (action.equals(Names.ACL_SAVE_ACTION)) {
 
-            String aclName = (String)sess.getAttribute(Names.ACL_ATT);
-            Hashtable aclInfo=(Hashtable)req.getAttribute(Names.ACL_INFO_ATT);
+            String aclName = (String) sess.getAttribute(Names.ACL_ATT);
+            Hashtable aclInfo = (Hashtable) req.getAttribute(Names.ACL_INFO_ATT);
 
             try {
                 validateAclForSave(aclInfo);
@@ -88,29 +88,29 @@ public class SaveHandler {
      * @param action
      */
     static void handleGroups(HttpServletRequest req, String action) {
-        String grpName= (String)req.getParameter("NAME");
-        String user= (String)req.getParameter("MEMBER");
-        Hashtable groups = (Hashtable)req.getAttribute("GROUPS");
-        Vector members = (Vector)groups.get(grpName);
+        String grpName = (String) req.getParameter("NAME");
+        String user = (String) req.getParameter("MEMBER");
+        Hashtable groups = (Hashtable) req.getAttribute("GROUPS");
+        Vector members = (Vector) groups.get(grpName);
 
-        if (action.equals( Names.MEMBER_ADD_ACTION) ) {
+        if (action.equals(Names.MEMBER_ADD_ACTION)) {
             if (Util.isNullStr(user))
                 req.setAttribute(Names.ERROR_ATT, "The username cannot be empty.");
-            else if ( members.contains(user))
+            else if (members.contains(user))
                 req.setAttribute(Names.ERROR_ATT, "The user already exists in the ACL.");
             else
                 members.add(user);
         }
-        else if (action.equals( Names.MEMBER_DEL_ACTION))
+        else if (action.equals(Names.MEMBER_DEL_ACTION))
             members.remove(user);
-        else if (action.equals( Names.GROUP_ADD_ACTION))  {
+        else if (action.equals(Names.GROUP_ADD_ACTION))  {
             if (Util.isNullStr(grpName))
                 req.setAttribute(Names.ERROR_ATT, "The group name cannot be empty.");
-            else if ( groups.containsKey(grpName))
+            else if (groups.containsKey(grpName))
                 req.setAttribute(Names.ERROR_ATT, "The localgroup already exists.");
             else
                 groups.put(grpName, new Vector());
-        } else if (action.equals( Names.GROUP_DEL_ACTION))
+        } else if (action.equals(Names.GROUP_DEL_ACTION))
             groups.remove(grpName);
 
 
@@ -124,25 +124,25 @@ public class SaveHandler {
     static void handleAclEntry(HttpServletRequest req, String action) {
         String aclName = (String)(req.getSession().getAttribute(Names.ACL_ATT));
 
-        String entryName= (String)req.getParameter("NAME");
-        String aclEntryType= (String)req.getParameter("TYPE");
+        String entryName= (String) req.getParameter("NAME");
+        String aclEntryType= (String) req.getParameter("TYPE");
 
-        String aclPerms = (String)req.getParameter("PERMISSIONS");
+        String aclPerms = (String) req.getParameter("PERMISSIONS");
 
-        String aclType = (String)req.getParameter("ACL_TYPE");
+        String aclType = (String) req.getParameter("ACL_TYPE");
 
-        if (  !Util.isNullStr(aclPerms) && aclPerms.lastIndexOf(',') == aclPerms.length()-1 )
-            aclPerms = aclPerms.substring(0, aclPerms.length()-1);
+        if (!Util.isNullStr(aclPerms) && aclPerms.lastIndexOf(',') == aclPerms.length() - 1)
+            aclPerms = aclPerms.substring(0, aclPerms.length() - 1);
 
         //!!! quick hard-coded fix !!!
         //later auth and anonymous will be handled as separate mechanisms
         //now just defined usernames
-        if (aclEntryType.equals("anonymous") || aclEntryType.equals("authenticated") || aclEntryType.equals("owner")  ) {
+        if (aclEntryType.equals("anonymous") || aclEntryType.equals("authenticated") || aclEntryType.equals("owner")) {
             entryName=aclEntryType;
             aclEntryType="user";
         }
 
-        Vector aclData = (Vector)req.getAttribute(Names.ACL_DATA_ATT);
+        Vector aclData = (Vector) req.getAttribute(Names.ACL_DATA_ATT);
         Hashtable acl=Util.getAclEntry(aclData, aclEntryType, entryName, aclType);
 
         if (action.equals(Names.ACL_ADD_ACTION)) {
@@ -160,7 +160,7 @@ public class SaveHandler {
                 acl.put("perms", aclPerms);
                 acl.put("acltype", aclType);
 
-                if ( aclEntryType.equals("localgroup") && !checkGroup(entryName, req) )
+                if (aclEntryType.equals("localgroup") && !checkGroup(entryName, req))
                     req.setAttribute(Names.ERROR_ATT, "Localgroup " + entryName + " does not exist.");
                 else
                     aclData.add(acl);
@@ -179,27 +179,27 @@ public class SaveHandler {
      *
      * @param req
      */
-    static void savePermissions (HttpServletRequest req ) {
+    static void savePermissions (HttpServletRequest req) {
 
-        HttpSession session = (HttpSession)req.getAttribute(Names.SESS_ATT);
+        HttpSession session = (HttpSession) req.getAttribute(Names.SESS_ATT);
 
-        String aclName = (String)session.getAttribute(Names.ACL_ATT);
+        String aclName = (String) session.getAttribute(Names.ACL_ATT);
         Hashtable acls = (Hashtable) req.getAttribute("ACLS");
 
-        Vector aclData = (Vector)req.getAttribute(Names.ACL_DATA_ATT);
+        Vector aclData = (Vector) req.getAttribute(Names.ACL_DATA_ATT);
 
-        String entryName = (String)req.getParameter("NAME");
-        String aclEntryType = (String)req.getParameter("TYPE");
-        String aclPermissions = (String)req.getParameter("PERMISSIONS");
+        String entryName = (String) req.getParameter("NAME");
+        String aclEntryType = (String) req.getParameter("TYPE");
+        String aclPermissions = (String) req.getParameter("PERMISSIONS");
 
-        String aclType = (String)req.getParameter("ACL_TYPE");
+        String aclType = (String) req.getParameter("ACL_TYPE");
 
-        if (!Util.isNullStr(aclPermissions) && aclPermissions.lastIndexOf(',') == aclPermissions.length()-1 )
-            aclPermissions = aclPermissions.substring(0, aclPermissions.length()-1);
+        if (!Util.isNullStr(aclPermissions) && aclPermissions.lastIndexOf(',') == aclPermissions.length() - 1)
+            aclPermissions = aclPermissions.substring(0, aclPermissions.length() - 1);
 
 
         //!!! quick hard-coded fix !!!
-        if (aclEntryType.equals("anonymous") || aclEntryType.equals("authenticated") || aclEntryType.equals("owner")  ) {
+        if (aclEntryType.equals("anonymous") || aclEntryType.equals("authenticated") || aclEntryType.equals("owner")) {
             entryName = aclEntryType;
             aclEntryType = "user";
         }
@@ -219,8 +219,8 @@ public class SaveHandler {
      * @param req
      * @return
      */
-    private static boolean checkGroup(String grpName, HttpServletRequest req ) {
-        Hashtable groups = (Hashtable)req.getAttribute(Names.GROUPS_PARAM_NAME);
+    private static boolean checkGroup(String grpName, HttpServletRequest req) {
+        Hashtable groups = (Hashtable) req.getAttribute(Names.GROUPS_PARAM_NAME);
         return groups.containsKey(grpName);
     }
 
@@ -230,15 +230,15 @@ public class SaveHandler {
      */
     private static void validateAclForSave(Hashtable acl) throws Exception {
 
-        Vector entries = (Vector)acl.get("entries");
+        Vector entries = (Vector) acl.get("entries");
         if (entries == null || entries.size() == 0)
             throw new Exception("You have no entries in this ACL");
 
         for (int i = 0; i < entries.size(); i++) {
 
-            Hashtable entry = (Hashtable)entries.get(i);
-            String id = (String)entry.get("id");
-            String perms = (String)entry.get("perms");
+            Hashtable entry = (Hashtable) entries.get(i);
+            String id = (String) entry.get("id");
+            String perms = (String) entry.get("perms");
             if (id == null || id.trim().length() == 0)
                 throw new Exception("There is an entry that is missing the Subject");
         }
