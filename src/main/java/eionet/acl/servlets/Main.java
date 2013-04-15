@@ -98,9 +98,9 @@ public class Main extends BaseAC implements Names {
         if (action.equals(LOGIN_ACTION)) {
             try {
                 doLogin(req, res);
-            } catch (Exception e ) {
+            } catch (Exception e) {
                 //l ("exception in login");
-                handleError(req, res, "Error: " + e.toString(), LOGIN_ACTION );
+                handleError(req, res, "Error: " + e.toString(), LOGIN_ACTION);
                 return;
             }
             //redirect to show applications
@@ -175,7 +175,7 @@ public class Main extends BaseAC implements Names {
 
                 //put useful data to HttpSession
                 initAclData(sess, requestedAppName, requestedAclName);
-            } catch (Exception e ) {
+            } catch (Exception e) {
                 e.printStackTrace(System.out);
                 handleError(req, res, "Error getting ACL data from Application " + selectedAppName + " " + e.toString() , SHOW_APPS_ACTION);
                 return;
@@ -210,7 +210,7 @@ public class Main extends BaseAC implements Names {
     /**
      * doPost()
      */
-    public void doPost( HttpServletRequest req, HttpServletResponse res ) throws ServletException, IOException {
+    public void doPost( HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         doGet(req, res);
     }
 
@@ -219,7 +219,7 @@ public class Main extends BaseAC implements Names {
 
         //init only, if something changed=user has selected a nwe application or ACL to modify
         //selAcl=previously selected ACL, selApp = previously selected app
-        if ((requestedAppName != null && !(selectedAclName.equals(requestedAclName) && selectedAppName.equals(requestedAppName))) || isSessionUserChanged )
+        if ((requestedAppName != null && !(selectedAclName.equals(requestedAclName) && selectedAppName.equals(requestedAppName))) || isSessionUserChanged)
             try {
                 HashMap apps = (HashMap) session.getAttribute(Names.APPLICATIONS_ATT);
                 //remote XML/RPC clients data in appClients Hash
@@ -277,22 +277,21 @@ public class Main extends BaseAC implements Names {
                         if (flags != null)
                             selectedAclPermissions = (Hashtable) flags.get(flagName);
                     }
-                }
-                catch (Exception e ) {
+                } catch (Exception e) {
                     e.printStackTrace(System.out);
                     throw new ServiceClientException(e, e.toString());
                 }
 
                 selectedAppName = requestedAppName;
 
-            } catch (ServiceClientException se ) {
+            } catch (ServiceClientException se) {
                 se.printStackTrace(System.out);
                 if (se.toString().indexOf("AuthenticationException") != -1) {
                     //authentication failed in the remote server
                     appClients.remove(requestedAppName);
                     throw new ServiceClientException(se, "Authentication in the remote application failed");
                 }
-                throw new Exception ("Error getting ACL data from the remote service " +  requestedAppName
+                throw new Exception("Error getting ACL data from the remote service " + requestedAppName
                         + " " + se.toString());
             }
 
@@ -310,21 +309,19 @@ public class Main extends BaseAC implements Names {
 
         String jspName = appNameAttr == null ? INDEX_JSP : MAIN_JSP;
 
-        if (action.equals (SAVE_PERMS_ACTION))
+        if (action.equals(SAVE_PERMS_ACTION))
             SaveHandler.savePermissions(req);
-        else  if (action.equals (MEMBER_ADD_ACTION) || action.equals (MEMBER_DEL_ACTION)
-                || action.equals (GROUP_ADD_ACTION) || action.equals (GROUP_DEL_ACTION)) {
+        else  if (action.equals(MEMBER_ADD_ACTION) || action.equals(MEMBER_DEL_ACTION)
+                || action.equals(GROUP_ADD_ACTION) || action.equals(GROUP_DEL_ACTION)) {
             SaveHandler.handleGroups(req, action);
-            if (action.equals (MEMBER_ADD_ACTION) || action.equals (MEMBER_DEL_ACTION))
+            if (action.equals(MEMBER_ADD_ACTION) || action.equals(MEMBER_DEL_ACTION))
                 action = SHOW_GRP_ACTION;
             else
                 action = SHOW_GROUPS_ACTION;
-        }
-        else if (action.equals (ACL_ADD_ACTION) || action.equals(ACL_DEL_ACTION)) {
+        } else if (action.equals(ACL_ADD_ACTION) || action.equals(ACL_DEL_ACTION)) {
             SaveHandler.handleAclEntry(req, action);
             action = "";
-        }
-        else if (action.equals(SAVE_GROUPS_ACTION) || action.equals(ACL_SAVE_ACTION)) {
+        } else if (action.equals(SAVE_GROUPS_ACTION) || action.equals(ACL_SAVE_ACTION)) {
             try {
                 SaveHandler.callRemoteMethod(req, action);
                 if (action.equals(ACL_SAVE_ACTION)) {
@@ -345,22 +342,22 @@ public class Main extends BaseAC implements Names {
                     req.setAttribute(PERMS_PARAM_NAME, selectedAclPermissions);
                     req.setAttribute(NOTOWNER_ATT, selectedAclOwner);
                 }
-            } catch (Exception e ) {
+            } catch (Exception e) {
                 req.setAttribute(Names.ERROR_ATT, "Error saving data: " + e.getMessage());
                 //throw new ServletException("Error calling remote method " + e.toString(), e);
             }
             action = "";
         }
 
-        if (action.equals( SHOW_APPS_ACTION ))
+        if (action.equals(SHOW_APPS_ACTION))
             jspName = "index.jsp";
-        else  if (action.equals( SHOW_APP_ACTION ))
+        else  if (action.equals(SHOW_APP_ACTION))
             jspName = "main.jsp";
-        else  if (action.equals( SHOW_GROUPS_ACTION ))
-            jspName= "groups.jsp";
-        else  if (action.equals( SHOW_GRP_ACTION))
+        else  if (action.equals(SHOW_GROUPS_ACTION))
+            jspName = "groups.jsp";
+        else  if (action.equals(SHOW_GRP_ACTION))
             jspName = "group.jsp";
-        else  if (action.equals( SHOW_PERMISSIONS_ACTION))
+        else  if (action.equals(SHOW_PERMISSIONS_ACTION))
             jspName = "permissions.jsp";
 
         req.setAttribute(SESS_ATT, req.getSession());

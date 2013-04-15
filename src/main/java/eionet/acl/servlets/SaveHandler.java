@@ -124,8 +124,8 @@ public class SaveHandler {
     static void handleAclEntry(HttpServletRequest req, String action) {
         String aclName = (String)(req.getSession().getAttribute(Names.ACL_ATT));
 
-        String entryName= (String) req.getParameter("NAME");
-        String aclEntryType= (String) req.getParameter("TYPE");
+        String entryName = (String) req.getParameter("NAME");
+        String aclEntryType = (String) req.getParameter("TYPE");
 
         String aclPerms = (String) req.getParameter("PERMISSIONS");
 
@@ -138,12 +138,12 @@ public class SaveHandler {
         //later auth and anonymous will be handled as separate mechanisms
         //now just defined usernames
         if (aclEntryType.equals("anonymous") || aclEntryType.equals("authenticated") || aclEntryType.equals("owner")) {
-            entryName=aclEntryType;
-            aclEntryType="user";
+            entryName = aclEntryType;
+            aclEntryType = "user";
         }
 
         Vector aclData = (Vector) req.getAttribute(Names.ACL_DATA_ATT);
-        Hashtable acl=Util.getAclEntry(aclData, aclEntryType, entryName, aclType);
+        Hashtable acl = Util.getAclEntry(aclData, aclEntryType, entryName, aclType);
 
         if (action.equals(Names.ACL_ADD_ACTION)) {
 
@@ -179,7 +179,7 @@ public class SaveHandler {
      *
      * @param req
      */
-    static void savePermissions (HttpServletRequest req) {
+    static void savePermissions(HttpServletRequest req) {
 
         HttpSession session = (HttpSession) req.getAttribute(Names.SESS_ATT);
 

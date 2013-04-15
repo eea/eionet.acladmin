@@ -24,8 +24,8 @@
 package eionet.acl;
 
 /**
-* Constants, used by Acl Admin Tool
-*/
+ * Constants used by Acl Admin Tool.
+ */
 public interface Names {
 
   //Request + session Attribute names
@@ -78,10 +78,10 @@ public interface Names {
   //public static final String ERROR_ACTION = "XXX";
 
   //Parameters
-  public static final String GROUPS_PARAM_NAME="GROUPS";
-  public static final String PERMS_PARAM_NAME="PRMS";
+  public static final String GROUPS_PARAM_NAME = "GROUPS";
+  public static final String PERMS_PARAM_NAME = "PRMS";
 
-  public static final String RPC_SERVICE_NAME="XService";
+  public static final String RPC_SERVICE_NAME = "XService";
 
   public static final String PRM_ACROSS_APPS_USERNAME = "apps_user";
   public static final String PRM_ACROSS_APPS_PASSWORD = "apps_pwd";

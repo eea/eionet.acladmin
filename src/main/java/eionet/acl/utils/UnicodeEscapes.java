@@ -318,7 +318,7 @@ public class UnicodeEscapes {
 
         if (s.length() == 2) return false;
 
-        String ss = s.substring(1, s.length()-1);
+        String ss = s.substring(1, s.length() - 1);
         return unicodeEscapes.containsKey(ss);
     }
 
@@ -333,12 +333,12 @@ public class UnicodeEscapes {
         if (!(s.startsWith("&") && s.endsWith(";"))) return false;
 
         char c = s.charAt(1);
-        if (c!='#') return false;
+        if (c != '#') return false;
 
         if (s.length() == 3) return false;
 
         try {
-            Integer.parseInt(s.substring(2, s.length()-1));
+            Integer.parseInt(s.substring(2, s.length() - 1));
         } catch (NumberFormatException e) {
             return false;
         }

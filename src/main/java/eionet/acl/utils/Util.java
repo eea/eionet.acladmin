@@ -23,14 +23,8 @@
 
 package eionet.acl.utils;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Hashtable;
-import eionet.acl.Names;
-import eionet.directory.DirectoryService;
 
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
@@ -47,12 +41,12 @@ public class Util {
      * @param descs
      * @return
      */
-    public static String getPrmDescrs(String perms, Hashtable descs ) {
+    public static String getPrmDescrs(String perms, Hashtable descs) {
         StringBuffer s = new StringBuffer();
-        StringTokenizer pT = new StringTokenizer(perms,",");
+        StringTokenizer pT = new StringTokenizer(perms, ",");
 
         while (pT.hasMoreTokens()) {
-            s.append( (String)descs.get( pT.nextToken()  ));
+            s.append((String) descs.get(pT.nextToken()));
             s.append("; ");
         }
 
@@ -64,7 +58,7 @@ public class Util {
      * @param s
      * @return
      */
-    public static boolean isNullStr(String s ) {
+    public static boolean isNullStr(String s) {
         if (s == null || s.length() == 0 || s.equals(" "))
             return true;
         else
@@ -76,21 +70,20 @@ public class Util {
      * @param aclName
      * @return
      */
-    public static String getParentAclName(String aclName ) {
+    public static String getParentAclName(String aclName) {
         if (!aclName.equals("/")) {
-            int pos = aclName.indexOf("/",1);
-            if ( pos == -1)
+            int pos = aclName.indexOf("/" ,1);
+            if (pos == -1)
                 return "/";
             else {
                 int posB = 0, posA = 0;
                 while (posB != -1) {
-                    posA=posB;
-                    posB=aclName.indexOf("/", posB+1);
+                    posA = posB;
+                    posB = aclName.indexOf("/", posB + 1);
                 }
                 return aclName.substring(0, posA);
             }
-        }
-        else
+        } else
             return null;
     }
 
@@ -103,11 +96,11 @@ public class Util {
      * @param aclType
      * @return
      */
-    public static Hashtable getAclEntry(Vector aclData, String eType, String eName, String aclType ) {
-        Hashtable aclPermissions=new Hashtable();
+    public static Hashtable getAclEntry(Vector aclData, String eType, String eName, String aclType) {
+        Hashtable aclPermissions = new Hashtable();
         for (int i = 0; i < aclData.size(); i++) {
-            Hashtable aclE=(Hashtable)aclData.elementAt(i);
-            if ( ((String)aclE.get("id")).equals(eName) && ((String)aclE.get("type")).equals(eType) && ((String)aclE.get("acltype")).equals(aclType)  )
+            Hashtable aclE = (Hashtable) aclData.elementAt(i);
+            if (((String) aclE.get("id")).equals(eName) && ((String) aclE.get("type")).equals(eType) && ((String) aclE.get("acltype")).equals(aclType))
                 return aclE;
         }
         return null;
@@ -134,7 +127,7 @@ public class Util {
             String name = (String)childrenAcls.get(i);
             result.add(name);
             Vector v = getChildrenAclsRecursive(appClient, name);
-            if (v != null && v.size()>0)
+            if (v != null && v.size() > 0)
                 result.add(v);
         }
 
@@ -170,7 +163,7 @@ public class Util {
                 boolean startsEscapeSequence = false;
                 int j = in.indexOf(';', i);
                 if (j > 0) {
-                    String s = in.substring(i, j+1);
+                    String s = in.substring(i, j + 1);
                     UnicodeEscapes unicodeEscapes = new UnicodeEscapes();
                     if (unicodeEscapes.isXHTMLEntity(s) || unicodeEscapes.isNumericHTMLEscapeCode(s))
                         startsEscapeSequence = true;
@@ -180,8 +173,7 @@ public class Util {
                     ret.append(c);
                 else
                     ret.append("&amp;");
-            }
-            else
+            } else
                 ret.append(c);
         }
 
