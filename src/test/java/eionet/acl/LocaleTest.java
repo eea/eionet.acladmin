@@ -1,4 +1,4 @@
-package eionet;
+package eionet.acl;
 
 import static junit.framework.Assert.assertEquals;
 import org.junit.Test;
