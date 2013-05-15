@@ -2,19 +2,21 @@ package eionet.acl.utils;
 
 import java.util.Hashtable;
 
-import junit.framework.TestCase;
+import static junit.framework.Assert.assertEquals;
+import org.junit.Test;
 
 /**
  *
  * @author Jaanus Heinlaid, e-mail: <a href="mailto:jaanus.heinlaid@tietoenator.com">jaanus.heinlaid@tietoenator.com</a>
  *
  */
-public class UtilTest extends TestCase{
+public class UtilTest {
 
     /**
      *
      */
-    public void test_replaceTags(){
+    @Test
+    public void replaceTags() {
 
         // test simple ampersand
         assertEquals(Util.replaceTags("Fruit & Vegetables"), "Fruit &amp; Vegetables");
@@ -33,7 +35,8 @@ public class UtilTest extends TestCase{
     /**
      *
      */
-    public void test_getPrmDescrs(){
+    @Test
+    public void getPrmDescrs() {
 
         Hashtable hash = new Hashtable();
         hash.put("a", "Add");
