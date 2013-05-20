@@ -23,31 +23,19 @@
 
 package eionet.acl.servlets;
 
-import javax.servlet.http.HttpServlet;
+import com.tee.uit.client.ServiceClientException;
+import com.tee.uit.client.ServiceClientIF;
+import eionet.acl.Names;
+import eionet.directory.DirectoryService;
+import java.io.IOException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Vector;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import javax.servlet.ServletException;
-import java.io.IOException;
-import java.util.Vector;
-
-import eionet.acl.AcrossApps;
-import eionet.acl.Names;
-
-import com.tee.uit.client.*;
-
-import java.util.Hashtable;
 import javax.servlet.http.HttpSession;
-
-import java.util.Enumeration;
-import java.util.Iterator;
-import java.util.HashMap;
-import eionet.directory.DirectoryService;
-import eionet.acl.utils.Util;
-//import com.tee.uit.security.AppUser;
-import java.security.acl.NotOwnerException;
-import java.lang.reflect.InvocationTargetException;
-import com.tee.uit.security.SignOnException;
+import javax.servlet.ServletException;
 
 /**
  *
@@ -210,7 +198,7 @@ public class Main extends BaseAC implements Names {
     /**
      * doPost()
      */
-    public void doPost( HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         doGet(req, res);
     }
 
@@ -219,7 +207,8 @@ public class Main extends BaseAC implements Names {
 
         //init only, if something changed=user has selected a nwe application or ACL to modify
         //selAcl=previously selected ACL, selApp = previously selected app
-        if ((requestedAppName != null && !(selectedAclName.equals(requestedAclName) && selectedAppName.equals(requestedAppName))) || isSessionUserChanged)
+        if ((requestedAppName != null && !(selectedAclName.equals(requestedAclName) && selectedAppName.equals(requestedAppName)))
+                || isSessionUserChanged)
             try {
                 HashMap apps = (HashMap) session.getAttribute(Names.APPLICATIONS_ATT);
                 //remote XML/RPC clients data in appClients Hash

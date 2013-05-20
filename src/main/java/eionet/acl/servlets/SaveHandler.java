@@ -23,16 +23,17 @@
 
 package eionet.acl.servlets;
 
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Hashtable;
-import eionet.acl.utils.Util;
-import java.util.Vector;
 import eionet.acl.Names;
+import eionet.acl.utils.Util;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Vector;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.tee.uit.client.*;
+import com.tee.uit.client.ServiceClientException;
+import com.tee.uit.client.ServiceClientIF;
 
 /**
  * Handler of storing methods for the ACL Admin Tool.
@@ -100,8 +101,7 @@ public class SaveHandler {
                 req.setAttribute(Names.ERROR_ATT, "The user already exists in the ACL.");
             else
                 members.add(user);
-        }
-        else if (action.equals(Names.MEMBER_DEL_ACTION))
+        } else if (action.equals(Names.MEMBER_DEL_ACTION))
             members.remove(user);
         else if (action.equals(Names.GROUP_ADD_ACTION))  {
             if (Util.isNullStr(grpName))
@@ -122,7 +122,7 @@ public class SaveHandler {
      * @param action
      */
     static void handleAclEntry(HttpServletRequest req, String action) {
-        String aclName = (String)(req.getSession().getAttribute(Names.ACL_ATT));
+        String aclName = (String) (req.getSession().getAttribute(Names.ACL_ATT));
 
         String entryName = (String) req.getParameter("NAME");
         String aclEntryType = (String) req.getParameter("TYPE");

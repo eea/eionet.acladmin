@@ -100,7 +100,9 @@ public class Util {
         Hashtable aclPermissions = new Hashtable();
         for (int i = 0; i < aclData.size(); i++) {
             Hashtable aclE = (Hashtable) aclData.elementAt(i);
-            if (((String) aclE.get("id")).equals(eName) && ((String) aclE.get("type")).equals(eType) && ((String) aclE.get("acltype")).equals(aclType))
+            if (((String) aclE.get("id")).equals(eName)
+                    && ((String) aclE.get("type")).equals(eType)
+                    && ((String) aclE.get("acltype")).equals(aclType))
                 return aclE;
         }
         return null;
@@ -122,7 +124,7 @@ public class Util {
 
         Vector params = new Vector();
         params.add(aclName);
-        Vector childrenAcls = (Vector)appClient.getValue("getChildrenAcls", params);
+        Vector childrenAcls = (Vector) appClient.getValue("getChildrenAcls", params);
         for (int i = 0; childrenAcls != null && i < childrenAcls.size(); i++) {
             String name = (String)childrenAcls.get(i);
             result.add(name);
@@ -138,8 +140,7 @@ public class Util {
      * Replaces the following characters with their XML escape codes: ', ", <, >, \, &.
      * If an ampersand is found and it is the start of an escape sequence, the ampersand is not escaped.
      *
-     * @param in
-     * @param inTextarea
+     * @param in - input string
      * @return
      */
     public static String replaceTags(String in) {

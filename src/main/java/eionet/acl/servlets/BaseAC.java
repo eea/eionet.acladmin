@@ -23,35 +23,28 @@
 
 package eionet.acl.servlets;
 
-import java.util.ResourceBundle;
+import com.tee.uit.client.ServiceClients;
+import com.tee.uit.client.ServiceClientException;
+import com.tee.uit.client.ServiceClientIF;
+import com.tee.uit.security.AccessController;
+import com.tee.uit.security.AccessControlListIF;
+import com.tee.uit.security.AppUser;
+import com.tee.uit.security.SignOnException;
+import eionet.acl.AcrossApps;
+import eionet.acl.Names;
+import eionet.acl.utils.Util;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.MissingResourceException;
-
+import java.util.ResourceBundle;
+import java.util.StringTokenizer;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import javax.servlet.http.HttpSession;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
-import java.io.IOException;
-import java.util.Vector;
-
-import com.tee.uit.client.*;
-import java.util.Hashtable;
-import javax.servlet.http.HttpSession;
-
-import java.util.Iterator;
-import java.util.HashMap;
-import java.util.StringTokenizer;
-
-import eionet.directory.DirectoryService;
-import eionet.acl.AcrossApps;
-import eionet.acl.Names;
-import eionet.directory.DirServiceException;
-import com.tee.uit.security.AppUser;
-import com.tee.uit.security.AccessControlListIF;
-import com.tee.uit.security.AccessController;
-import eionet.acl.utils.Util;
-import com.tee.uit.security.SignOnException;
 
 /**
  * Base servlet for all servlets in Acl Admin Tool.
@@ -61,7 +54,8 @@ public abstract class BaseAC extends HttpServlet {
     private ResourceBundle props;
 
     protected HashMap apps;
-    protected HashMap appClients; //holds ServiceClients (RPC clients)
+    /** Holds ServiceClients (RPC clients). */
+    protected HashMap appClients;
 
     protected final String ACL_readPermission = "r";
     protected final String ACL_appAclName = "/";
@@ -104,7 +98,7 @@ public abstract class BaseAC extends HttpServlet {
     /**
      * doGet().
      */
-    public abstract void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException ;
+    public abstract void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException;
 
     /**
      * dpPost().
@@ -189,14 +183,13 @@ public abstract class BaseAC extends HttpServlet {
         req.setAttribute(Names.ERROR_ATT, errMsg);
         String jspName = Names.LOGIN_JSP;  //default
 
-        if (action.equals(Names.LOGIN_ACTION))
+        if (action.equals(Names.LOGIN_ACTION)) {
             jspName = Names.LOGIN_JSP;
-        else if (action.equals(Names.SHOW_APPS_ACTION))
+        } else if (action.equals(Names.SHOW_APPS_ACTION)) {
             jspName = Names.INDEX_JSP;
-        else if (action.equals("")) {
+        } else if (action.equals("")) {
             jspName = Names.MAIN_JSP;
-        }
-        else if (action.equals(Names.ACT_SEARCH_ACROSS_APPS)) {
+        } else if (action.equals(Names.ACT_SEARCH_ACROSS_APPS)) {
             jspName = Names.INDEX_JSP;
         }
 
@@ -212,14 +205,14 @@ public abstract class BaseAC extends HttpServlet {
             HttpSession session = getSession(req);
 
             if (session == null)
-                throw new SecurityException ("No session ");
+                throw new SecurityException("No session ");
 
             AppUser aclUser = (AppUser) session.getAttribute(Names.USER_ATT);
 
             if (aclUser == null)
-                throw new SecurityException ("No user ");
+                throw new SecurityException("No user ");
             else if (aclUser.getUserName() == null)
-                throw new SecurityException ("No user name ");
+                throw new SecurityException("No user name ");
 
         } catch (SecurityException e) {
             if (session != null) {
@@ -377,8 +370,7 @@ public abstract class BaseAC extends HttpServlet {
             }
 
             session.setAttribute(Names.ATT_ACROSS_APPS, acrossApps);
-        }
-        else if (req.getParameter(Names.PRM_RELOAD_ACROSS_APPS) != null) { // reload
+        } else if (req.getParameter(Names.PRM_RELOAD_ACROSS_APPS) != null) { // reload
             try {
                 acrossApps.reload();
             } catch (ServiceClientException sce) {
@@ -391,7 +383,7 @@ public abstract class BaseAC extends HttpServlet {
         }
 
         Hashtable resultHash = acrossApps.getSubjectEntries(subjectID, subjectType);
-        if (resultHash != null && resultHash.size()>0)
+        if (resultHash != null && resultHash.size() > 0)
             req.setAttribute(Names.ATT_SEARCH_ACROSS_APPS_RESULT, resultHash);
 
         // dispatch
