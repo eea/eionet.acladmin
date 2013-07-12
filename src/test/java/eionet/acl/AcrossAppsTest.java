@@ -1,6 +1,7 @@
 package eionet.acl;
 
-import static junit.framework.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import java.text.Collator;
 import java.util.Collections;
@@ -8,11 +9,11 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.Vector;
+
 import org.junit.Test;
-import com.tee.uit.client.ServiceClientIF;
+
 import com.tee.uit.client.ServiceClientException;
-
-
+import com.tee.uit.client.ServiceClientIF;
 /**
  *
  * @author Søren Roug, e-mail: <a href="mailto:soren.roug@eea.europa.eu">soren.roug@eea.europa.eu</a>
@@ -22,6 +23,9 @@ public class AcrossAppsTest {
 
     /**
      * Helper method.
+     *
+     * @param resultHash
+     *            has to be printed
      *
      */
     private static void printResultHash(Hashtable resultHash) {
@@ -66,7 +70,8 @@ public class AcrossAppsTest {
                     values[3] = aclType;
                     values[4] = permissions;
                     for (int l = 0; l < values.length; l++) {
-                        if (l > 0) System.out.print(" | ");
+                        if (l > 0)
+                            System.out.print(" | ");
                         System.out.print(values[l]);
                     }
                     System.out.println("");
@@ -75,40 +80,64 @@ public class AcrossAppsTest {
         }
     }
 
-    /*
-     * TODO: Add some real assertions
+    /**
+     * tests getSubejctEntries method.
+     *
+     * @throws Exception
+     *             if fake client init fails
      */
     @Test
     public void getSubjectEntries() throws Exception {
 
         HashMap apps = new HashMap();
         HashMap app = new HashMap();
-        //app.put("url", "http://dd.eionet.eu.int/rpcrouter");
-        app.put("url", "http://localhost:8080/datadict/public/rpcrouter");
+        //app name is parsed from the url to simulate multiple applications in FakeRemoteService
+        app.put("url", "http://dd.notexists.int/rpcrouter");
         apps.put("DataDict", app);
         app = new HashMap();
-        app.put("url", "http://rod.eionet.eu.int/rpcrouter");
+        app.put("url", "http://rod.notexists.int/rpcrouter");
         apps.put("ROD", app);
 
         FakeAcrossApps acrossApps = new FakeAcrossApps(apps, "heinlja", "hayland");
         acrossApps.init();
-        Hashtable resultHash = acrossApps.getSubjectEntries("rod_admin", "localgroup");
+        Hashtable resultHash = acrossApps.getSubjectEntries("dd_admin", "localgroup");
         if (resultHash != null && resultHash.size() > 0) {
             printResultHash(resultHash);
         }
+        Hashtable<String, Object> ddAppHash = (Hashtable<String, Object>) resultHash.get("DataDict");
+
+        Hashtable ddAcls = (Hashtable)ddAppHash.get("acls");
+
+        //heinlja's permissions in /datasets
+        assertEquals("v,i,u,d", ((Hashtable) ((Vector)ddAcls.get("/datasets")).get(0)).get("permissions"));
+
+        Hashtable<String, Object> rodAppHash = (Hashtable<String, Object>) resultHash.get("ROD");
+        assertEquals(1, ddAppHash.get("total_acl_entries"));
+
+
+        //in ROD there is no dd_admin group
+        assertNull(rodAppHash);
     }
 
-    /*
-     * TODO: Add some real assertions
+    /**
+     * tests for getUserEntries().
+     *
+     * @throws Exception
+     *             if client initialization fails
      */
     @Test
     public void getUserEntries() throws Exception {
 
         HashMap apps = new HashMap();
         HashMap app = new HashMap();
-        //app.put("url", "http://dd.eionet.eu.int/rpcrouter");
-        app.put("url", "http://localhost:8080/datadict/public/rpcrouter");
+        //app name is parsed from the url in FakeRemoteService, no real remote call is done.
+        app.put("url", "http://dd.somewhere.noexisting.eu/rpcrouter");
         apps.put("DataDict", app);
+
+        app = new HashMap();
+        //app name is parsed from the url in FakeRemoteService, no real remote call is done.
+        app.put("url", "http://rod.somewhere.noexisting.eu/rpcrouter");
+        apps.put("ROD", app);
 
         FakeAcrossApps acrossApps = new FakeAcrossApps(apps, "heinlja", "xxx");
         acrossApps.init();
@@ -125,43 +154,95 @@ public class AcrossAppsTest {
                 values[4] = (String) rowHash.get("id");
                 values[5] = (String) rowHash.get("perms");
                 for (int j = 0; j < values.length; j++) {
-                    if (j > 0) System.out.print(" | ");
+                    if (j > 0)
+                        System.out.print(" | ");
                     System.out.print(values[j]);
                 }
                 System.out.println();
             }
         }
+        //heinlja has 3 entries in 2 applications
+        assertEquals(3, v.size());
+
+        Hashtable ddEntries = (Hashtable) v.get(0);
+        assertEquals("user", ddEntries.get("type"));
+        assertEquals("i,v", ddEntries.get("perms"));
+
+        Hashtable rodInstruments = (Hashtable) v.get(1);
+        Hashtable rodObligations = (Hashtable) v.get(2);
+
+        assertEquals("u", rodInstruments.get("perms"));
+        assertEquals("/instruments", rodInstruments.get("acl_name"));
+        assertEquals("/obligations", rodObligations.get("acl_name"));
+
     }
 
-}
+    /**
+     * See "Replace Global References with Getter" in "Working Effectively with Legacy Code".
+     */
+    class FakeAcrossApps extends AcrossApps {
+        /** fake service client. */
+        private ServiceClientIF serviceClient = new FakeServiceClient();
 
+        /**
+         *
+         * Creates fake class.
+         *
+         * @param apps
+         *            fake remote applications.
+         * @param username
+         *            user name
+         * @param password
+         *            fake pwd
+         */
+        public FakeAcrossApps(HashMap apps, String username, String password) {
+            super(apps, username, password);
+        }
 
-
-/*
- * See "Replace Global References with Getter" in "Working Effectively with Legacy Code".
- */
-class FakeAcrossApps extends AcrossApps {
-
-    private ServiceClientIF serviceClient = new FakeServiceClient();
-
-    public FakeAcrossApps(HashMap apps, String username, String password) {
-        super(apps, username, password);
+        @Override
+        protected ServiceClientIF getServiceClient(String serviceName, String appUrl) throws ServiceClientException {
+            ((FakeServiceClient) serviceClient).setServiceUrl(appUrl);
+            return serviceClient;
+        }
     }
 
-    @Override
-    protected ServiceClientIF getServiceClient(String serviceName, String appUrl) throws ServiceClientException {
-        return serviceClient;
-    }
-}
+    /**
+     * fake service client.
+     */
+    class FakeServiceClient implements ServiceClientIF {
 
-class FakeServiceClient implements ServiceClientIF {
+        /**
+         * instance of fake remote service that mocks remote service call responses.
+         */
+        private FakeRemoteService service = new FakeRemoteService();
 
-    @Override
-    public Object getValue(String methodName, Vector parameters) throws ServiceClientException {
-        return null;
+        @Override
+        public Object getValue(String methodName, Vector parameters) throws ServiceClientException {
+
+            if (methodName.equals("getAclInfos")) {
+                return service.getFakeAclInfos();
+            } else if (methodName.equals("getLocalGroups")) {
+                return service.getFakeLocalGroups();
+            } else if (methodName.equals("getAclManagerInfo")) {
+                // NOT used in tests yet
+            }
+            return null;
+        }
+
+        @Override
+        public void setCredentials(String userName, String pwd) throws ServiceClientException {
+        }
+
+        /**
+         * sets service url. application name is parsed from the url for testing to sHashtable)imulate test with multiple remote applications.
+         * No real remote call is done
+         *
+         * @param url
+         *            fake service url
+         */
+        public void setServiceUrl(String url) {
+            service.setServiceUrl(url);
+        }
     }
 
-    @Override
-    public void setCredentials (String userName, String pwd) throws ServiceClientException {
-    }
 }
