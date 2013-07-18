@@ -23,19 +23,21 @@
 
 package eionet.acl.servlets;
 
-import com.tee.uit.client.ServiceClientException;
-import com.tee.uit.client.ServiceClientIF;
-import eionet.acl.Names;
-import eionet.directory.DirectoryService;
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Vector;
+
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.ServletException;
+
+import com.tee.uit.client.ServiceClientException;
+import com.tee.uit.client.ServiceClientIF;
+
+import eionet.acl.Names;
 
 /**
  *
@@ -68,6 +70,7 @@ public class Main extends BaseAC implements Names {
     /**
      *
      */
+    @Override
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
 
         String action = req.getParameter("ACTION");
@@ -134,8 +137,17 @@ public class Main extends BaseAC implements Names {
                 if (e instanceof ServiceClientException) {
                     String errApp = (String) req.getAttribute(Names.ATT_ERR_APP);
                     System.out.println("application=" + errApp);
-                    if (errMessage != null && errApp != null)
+
+                    //parse error message to distinguish authentication error
+                    if (errMessage.indexOf("Not authenticated") != -1) {
+                        errMessage = "User not authenticated";
+                    } else {
+                        errMessage = "Technical error";
+                    }
+
+                    if (errMessage != null && errApp != null) {
                         errMessage = errMessage + " (application=" + errApp + ")";
+                    }
                 }
 
                 handleError(req, res, errMessage, action);
@@ -165,7 +177,7 @@ public class Main extends BaseAC implements Names {
                 initAclData(sess, requestedAppName, requestedAclName);
             } catch (Exception e) {
                 e.printStackTrace(System.out);
-                handleError(req, res, "Error getting ACL data from Application " + selectedAppName + " " + e.toString() , SHOW_APPS_ACTION);
+                handleError(req, res, e.getMessage() , SHOW_APPS_ACTION);
                 return;
             }
         }
@@ -198,6 +210,7 @@ public class Main extends BaseAC implements Names {
     /**
      * doPost()
      */
+    @Override
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         doGet(req, res);
     }
@@ -275,13 +288,14 @@ public class Main extends BaseAC implements Names {
 
             } catch (ServiceClientException se) {
                 se.printStackTrace(System.out);
-                if (se.toString().indexOf("AuthenticationException") != -1) {
+
+                if (se.getMessage().indexOf("Not authenticated") != -1) {
                     //authentication failed in the remote server
                     appClients.remove(requestedAppName);
-                    throw new ServiceClientException(se, "Authentication in the remote application failed");
+                    throw new ServiceClientException(se, "Authentication failed [" + requestedAppName + "]");
+                } else {
+                    throw new Exception("Technical error [" + requestedAppName + "]");
                 }
-                throw new Exception("Error getting ACL data from the remote service " + requestedAppName
-                        + " " + se.toString());
             }
 
             isSessionUserChanged = false;
