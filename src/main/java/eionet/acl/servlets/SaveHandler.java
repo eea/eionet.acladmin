@@ -23,23 +23,27 @@
 
 package eionet.acl.servlets;
 
-import eionet.acl.Names;
-import eionet.acl.utils.Util;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Vector;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.log4j.Logger;
+
 import com.tee.uit.client.ServiceClientException;
 import com.tee.uit.client.ServiceClientIF;
+
+import eionet.acl.Names;
+import eionet.acl.utils.Util;
 
 /**
  * Handler of storing methods for the ACL Admin Tool.
  */
 public class SaveHandler {
-
+    /** class logger. */
+     private static Logger LOGGER = Logger.getLogger(SaveHandler.class);
     /**
      * Calls XML/RPC method for storing groups or ACL information.
      *
@@ -49,6 +53,7 @@ public class SaveHandler {
      */
     static void callRemoteMethod(HttpServletRequest req, String action) throws ServiceClientException  {
 
+        LOGGER.debug("callRemoteMethod() action=" + action);
         HttpSession sess = (HttpSession) req.getAttribute(Names.SESS_ATT);
         String appName = (String) sess.getAttribute(Names.APP_ATT);
         HashMap appClients = (HashMap) sess.getAttribute(Names.APPCLIENTS_ATT);
@@ -67,18 +72,20 @@ public class SaveHandler {
 
             String aclName = (String) sess.getAttribute(Names.ACL_ATT);
             Hashtable aclInfo = (Hashtable) req.getAttribute(Names.ACL_INFO_ATT);
+            LOGGER.debug("ACL " + aclName + " has " + aclInfo.size() + " entries ");
 
             try {
                 validateAclForSave(aclInfo);
             } catch (Exception e) {
                 throw new ServiceClientException(e.getMessage());
             }
-
+            LOGGER.debug("ACL " + aclName + " validated.");
             prms.add(aclInfo);
             methodName = "setAclInfo";
         }
 
         client.getValue(methodName, prms);
+        LOGGER.debug("ACL value set.");
     }
 
     /**
@@ -89,8 +96,8 @@ public class SaveHandler {
      * @param action
      */
     static void handleGroups(HttpServletRequest req, String action) {
-        String grpName = (String) req.getParameter("NAME");
-        String user = (String) req.getParameter("MEMBER");
+        String grpName = req.getParameter("NAME");
+        String user = req.getParameter("MEMBER");
         Hashtable groups = (Hashtable) req.getAttribute("GROUPS");
         Vector members = (Vector) groups.get(grpName);
 
@@ -124,12 +131,12 @@ public class SaveHandler {
     static void handleAclEntry(HttpServletRequest req, String action) {
         String aclName = (String) (req.getSession().getAttribute(Names.ACL_ATT));
 
-        String entryName = (String) req.getParameter("NAME");
-        String aclEntryType = (String) req.getParameter("TYPE");
+        String entryName = req.getParameter("NAME");
+        String aclEntryType = req.getParameter("TYPE");
 
-        String aclPerms = (String) req.getParameter("PERMISSIONS");
+        String aclPerms = req.getParameter("PERMISSIONS");
 
-        String aclType = (String) req.getParameter("ACL_TYPE");
+        String aclType = req.getParameter("ACL_TYPE");
 
         if (!Util.isNullStr(aclPerms) && aclPerms.lastIndexOf(',') == aclPerms.length() - 1)
             aclPerms = aclPerms.substring(0, aclPerms.length() - 1);
@@ -188,11 +195,11 @@ public class SaveHandler {
 
         Vector aclData = (Vector) req.getAttribute(Names.ACL_DATA_ATT);
 
-        String entryName = (String) req.getParameter("NAME");
-        String aclEntryType = (String) req.getParameter("TYPE");
-        String aclPermissions = (String) req.getParameter("PERMISSIONS");
+        String entryName = req.getParameter("NAME");
+        String aclEntryType = req.getParameter("TYPE");
+        String aclPermissions = req.getParameter("PERMISSIONS");
 
-        String aclType = (String) req.getParameter("ACL_TYPE");
+        String aclType = req.getParameter("ACL_TYPE");
 
         if (!Util.isNullStr(aclPermissions) && aclPermissions.lastIndexOf(',') == aclPermissions.length() - 1)
             aclPermissions = aclPermissions.substring(0, aclPermissions.length() - 1);
