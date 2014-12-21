@@ -1,7 +1,8 @@
-Documentation:
+ACLAdmin
+========
 
-Pre-install steps:
-===========================
+Pre-install steps
+-----------------
 
 1. Create local.properties like default.properties as an example.
 
@@ -16,6 +17,7 @@ Pre-install steps:
 4. Modify the ${app.home} property value in local.properties file
 
 
-Building the war:
-=================
+Building the war
+----------------
+
 Execute command: mvn install
