@@ -27,7 +27,7 @@
 
 	<servlet>
 		<servlet-name>main</servlet-name>
-                <servlet-class>eionet.acl.servlets.Main</servlet-class>
+                <servlet-class>eionet.acladmin.servlets.Main</servlet-class>
 	</servlet>
 	<servlet>
 		<servlet-name>xmlrpcrouter</servlet-name>

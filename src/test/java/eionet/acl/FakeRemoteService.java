@@ -1,4 +1,4 @@
-package eionet.acl;
+package eionet.acladmin;
 
 import java.util.Hashtable;
 import java.util.Vector;

@@ -21,7 +21,7 @@
  * Original Code: Kaido Laine (TietoEnator)
  */
 
-package eionet.acl.servlets;
+package eionet.acladmin.servlets;
 
 import java.io.IOException;
 import java.util.Enumeration;
@@ -37,7 +37,7 @@ import javax.servlet.http.HttpSession;
 import com.tee.uit.client.ServiceClientException;
 import com.tee.uit.client.ServiceClientIF;
 
-import eionet.acl.Names;
+import eionet.acladmin.Names;
 
 /**
  *

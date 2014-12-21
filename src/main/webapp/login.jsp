@@ -1,5 +1,5 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
-<%@ page import="eionet.acl.Names" %>
+<%@ page import="eionet.acladmin.Names" %>
 
 <%
   String ctx = request.getContextPath();
@@ -82,7 +82,7 @@ var picklist = new Array();
 	if (err!= null){ %>
         <div id="errormessage">
             <h1>Error!</h1>
-            <p><%=eionet.acl.utils.Util.replaceTags(err)%></p>
+            <p><%=eionet.acladmin.utils.Util.replaceTags(err)%></p>
         </div><%
     }
     %>

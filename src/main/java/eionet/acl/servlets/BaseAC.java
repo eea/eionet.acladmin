@@ -21,18 +21,18 @@
  * Original Code: Kaido Laine (TietoEnator)
  */
 
-package eionet.acl.servlets;
+package eionet.acladmin.servlets;
 
 import com.tee.uit.client.ServiceClients;
 import com.tee.uit.client.ServiceClientException;
 import com.tee.uit.client.ServiceClientIF;
-import com.tee.uit.security.AccessController;
-import com.tee.uit.security.AccessControlListIF;
-import com.tee.uit.security.AppUser;
-import com.tee.uit.security.SignOnException;
-import eionet.acl.AcrossApps;
-import eionet.acl.Names;
-import eionet.acl.utils.Util;
+import eionet.acl.AccessController;
+import eionet.acl.AccessControlListIF;
+import eionet.acl.AppUser;
+import eionet.acl.SignOnException;
+import eionet.acladmin.AcrossApps;
+import eionet.acladmin.Names;
+import eionet.acladmin.utils.Util;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Hashtable;

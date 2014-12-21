@@ -22,7 +22,7 @@
  * Original Code: Jaanus Heinlaid (TietoEnator)
  */
 
-package eionet.acl.utils;
+package eionet.acladmin.utils;
 
 import java.util.Hashtable;
 

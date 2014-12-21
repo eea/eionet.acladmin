@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <%@ page import="java.util.Hashtable, java.util.Vector, java.util.HashMap, java.util.Iterator,
-		eionet.acl.utils.Util, eionet.acl.Names" %>
+		eionet.acladmin.utils.Util, eionet.acladmin.Names" %>
 <%
 
 	
@@ -123,7 +123,7 @@ request.setAttribute("breadcrumbs", breadcrumbs);
 	    %>
         <div id="errormessage">
             <h1>Error!</h1>
-            <p><%=eionet.acl.utils.Util.replaceTags(err)%></p>
+            <p><%=eionet.acladmin.utils.Util.replaceTags(err)%></p>
         </div><%
     }
     %>

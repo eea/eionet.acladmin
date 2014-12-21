@@ -2,8 +2,8 @@
 
 <%@ page import="java.util.*" %>
 <%@ page import="java.text.Collator" %>
-<%@ page import="eionet.acl.*" %>
-<%@ page import="eionet.acl.Names" %>
+<%@ page import="eionet.acladmin.*" %>
+<%@ page import="eionet.acladmin.Names" %>
 
 <%
 	Hashtable resultHash = (Hashtable)request.getAttribute(Names.ATT_SEARCH_ACROSS_APPS_RESULT);

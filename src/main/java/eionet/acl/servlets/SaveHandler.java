@@ -21,7 +21,7 @@
  * Original Code: Kaido Laine (TietoEnator)
  */
 
-package eionet.acl.servlets;
+package eionet.acladmin.servlets;
 
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -35,8 +35,8 @@ import org.apache.log4j.Logger;
 import com.tee.uit.client.ServiceClientException;
 import com.tee.uit.client.ServiceClientIF;
 
-import eionet.acl.Names;
-import eionet.acl.utils.Util;
+import eionet.acladmin.Names;
+import eionet.acladmin.utils.Util;
 
 /**
  * Handler of storing methods for the ACL Admin Tool.

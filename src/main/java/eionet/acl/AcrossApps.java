@@ -4,7 +4,7 @@
  * To change the template for this generated file go to
  * Window&gt;Preferences&gt;Java&gt;Code Generation&gt;Code and Comments
  */
-package eionet.acl;
+package eionet.acladmin;
 
 import java.text.Collator;
 import java.util.Collections;
@@ -15,7 +15,7 @@ import java.util.Iterator;
 import java.util.Vector;
 import java.text.Collator;
 import com.tee.uit.client.*;
-import eionet.acl.utils.Util;
+import eionet.acladmin.utils.Util;
 
 /*
  *

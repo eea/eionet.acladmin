@@ -1,4 +1,4 @@
-<%@ page import="java.util.Hashtable, java.util.Vector, java.util.HashMap, java.util.Iterator, eionet.acl.utils.Util, eionet.acl.Names" %>
+<%@ page import="java.util.Hashtable, java.util.Vector, java.util.HashMap, java.util.Iterator, eionet.acladmin.utils.Util, eionet.acladmin.Names" %>
 <%
 
 	Hashtable groups = (Hashtable) request.getAttribute(Names.GROUPS_PARAM_NAME);

@@ -21,7 +21,7 @@
  * Original Code: Kaido Laine (TietoEnator)
  */
 
-package eionet.acl;
+package eionet.acladmin;
 
 /**
  * Constants used by Acl Admin Tool.
