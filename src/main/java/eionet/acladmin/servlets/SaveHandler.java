@@ -32,8 +32,8 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 
-import com.tee.uit.client.ServiceClientException;
-import com.tee.uit.client.ServiceClientIF;
+import eionet.rpcclient.ServiceClientException;
+import eionet.rpcclient.ServiceClientIF;
 
 import eionet.acladmin.Names;
 import eionet.acladmin.utils.Util;

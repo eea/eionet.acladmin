@@ -34,8 +34,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.tee.uit.client.ServiceClientException;
-import com.tee.uit.client.ServiceClientIF;
+import eionet.rpcclient.ServiceClientException;
+import eionet.rpcclient.ServiceClientIF;
 
 import eionet.acladmin.Names;
 

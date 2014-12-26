@@ -23,9 +23,9 @@
 
 package eionet.acladmin.servlets;
 
-import com.tee.uit.client.ServiceClients;
-import com.tee.uit.client.ServiceClientException;
-import com.tee.uit.client.ServiceClientIF;
+import eionet.rpcclient.ServiceClients;
+import eionet.rpcclient.ServiceClientException;
+import eionet.rpcclient.ServiceClientIF;
 import eionet.acl.AccessController;
 import eionet.acl.AccessControlListIF;
 import eionet.acl.AppUser;

@@ -14,7 +14,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
 import java.text.Collator;
-import com.tee.uit.client.*;
+import eionet.rpcclient.*;
 import eionet.acladmin.utils.Util;
 
 /*

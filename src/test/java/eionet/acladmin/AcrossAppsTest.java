@@ -12,8 +12,8 @@ import java.util.Vector;
 
 import org.junit.Test;
 
-import com.tee.uit.client.ServiceClientException;
-import com.tee.uit.client.ServiceClientIF;
+import eionet.rpcclient.ServiceClientException;
+import eionet.rpcclient.ServiceClientIF;
 /**
  *
  * @author Søren Roug, e-mail: <a href="mailto:soren.roug@eea.europa.eu">soren.roug@eea.europa.eu</a>

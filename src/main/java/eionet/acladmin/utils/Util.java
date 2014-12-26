@@ -28,8 +28,8 @@ import java.util.Hashtable;
 import java.util.StringTokenizer;
 import java.util.Vector;
 
-import com.tee.uit.client.ServiceClientException;
-import com.tee.uit.client.ServiceClientIF;
+import eionet.rpcclient.ServiceClientException;
+import eionet.rpcclient.ServiceClientIF;
 
 /**
  * Common utils for ACL Admin Tool.
