@@ -21,15 +21,6 @@
 
     <repositories>
         <repository>
-            <id>project-local</id>
-            <name>project-local repository</name>
-            <layout>default</layout>
-            <url>file:///${basedir}/lib</url>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-        <repository>
             <id>ehcache-repo</id>
             <name>ehcache repository</name>
             <url>http://oss.sonatype.org/content/repositories/sourceforge-releases</url>
