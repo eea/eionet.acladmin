@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+
+    <Environment name="acl/file.aclfolder" value="${app.home}/acls" type="java.lang.String" override="false"/>
+    <Environment name="acl/file.localgroups" value="${app.home}/acls/acladmin.group" type="java.lang.String" override="false"/>
+    <Environment name="acl/file.permissions" value="${app.home}/acls/acladmin.prms" type="java.lang.String" override="false"/>
+    <Environment name="acl/owner.permission" value="c" type="java.lang.String" override="false"/>
+    <Environment name="acl/authenticated.access" value="authenticated" type="java.lang.String" override="false"/>
+    <Environment name="acl/anonymous.access" value="anonymous" type="java.lang.String" override="false"/>
+    <Environment name="acl/file.localusers" value="${app.home}/acls/users.xml" type="java.lang.String" override="false"/>
+    <Environment name="acl/persistence.provider" value="eionet.acl.PersistenceFile" type="java.lang.String" override="false"/>
+
+    <!--
+    <Environment name="acladmin/propertiesfile" value="${app.home}/acladmin.properties" type="java.lang.String" override="false"/>
+    -->
+
+</Context>

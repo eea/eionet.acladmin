@@ -31,7 +31,7 @@
 	</servlet>
 	<servlet>
 		<servlet-name>xmlrpcrouter</servlet-name>
-                <servlet-class>eionet.rpcservlets.XmlRpcRouter</servlet-class>
+                <servlet-class>eionet.rpcserver.servlets.XmlRpcRouter</servlet-class>
 	</servlet>
 	<!-- servlet mappings -->
 

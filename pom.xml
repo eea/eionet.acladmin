@@ -2,7 +2,7 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
     <modelVersion>4.0.0</modelVersion>
-    <groupId>eionet.acladmin</groupId>
+    <groupId>eionet</groupId>
     <artifactId>acladmin</artifactId>
     <packaging>war</packaging>
 
@@ -13,7 +13,7 @@
         <checkstyle.config.location>${basedir}/docs/checkstyle.xml</checkstyle.config.location>
     </properties>
 
-    <version>1.1</version>
+    <version>1.1-SNAPSHOT</version>
     <name>acladmin</name>
     <url>https://github.com/eea/eionet.acladmin</url>
 
@@ -188,22 +188,20 @@
     <!-- dependencies -->
 
     <dependencies>
-    <!--
-        <dependency>
-            <groupId>eionet</groupId>
-            <artifactId>eionet-dir</artifactId>
-            <version>2.5</version>
-        </dependency>
-        -->
         <dependency>
             <groupId>eionet</groupId>
             <artifactId>acl</artifactId>
-            <version>2.0</version>
+            <version>3.0</version>
         </dependency>
         <dependency>
             <groupId>eionet</groupId>
             <artifactId>rpcclient</artifactId>
-            <version>2.0</version>
+            <version>3.0</version>
+        </dependency>
+        <dependency>
+            <groupId>eionet</groupId>
+            <artifactId>rpcserver</artifactId>
+            <version>3.0</version>
         </dependency>
         <dependency>
             <groupId>xalan</groupId>
@@ -236,6 +234,26 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
             <version>4.11</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.httpunit</groupId>
+            <artifactId>httpunit</artifactId>
+            <version>1.7.2</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- For testing JSPs
+        <dependency>
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>jasper</artifactId>
+            <version>6.0.43</version>
+            <scope>test</scope>
+        </dependency>
+        -->
+        <dependency> <!-- JNDI support -->
+            <groupId>org.apache.tomcat</groupId>
+            <artifactId>tomcat-catalina</artifactId>
+            <version>7.0.57</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
