@@ -1,0 +1,9 @@
+a:Add
+c:Control ACL
+d:Delete
+i:Insert
+r:Read
+u:Update
+v:View
+x:Execute
+w:Write

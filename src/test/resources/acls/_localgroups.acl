@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<acl description="Groups_table">
+<entries>
+<entry type="object">
+<principal id="roug" type="user"/>
+<permissions>
+<permission id="c"/>
+<permission id="v"/>
+<permission id="u"/>
+</permissions>
+</entry>
+<entry type="object">
+<principal id="admin" type="localgroup"/>
+<permissions>
+<permission id="c"/>
+<permission id="v"/>
+<permission id="u"/>
+</permissions>
+</entry>
+</entries>
+</acl>

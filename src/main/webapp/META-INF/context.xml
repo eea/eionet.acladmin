@@ -1,6 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Context>
-
+    <!--
+    <Environment name="acl/propertiesfile" value="${app.home}/acl.properties" type="java.lang.String" override="false"/>
+    <Environment name="acladmin/propertiesfile" value="${app.home}/acladmin.properties" type="java.lang.String" override="false"/>
+    <Environment name="rpc/propertiesfile" value="${app.home}/rpc.properties" type="java.lang.String" override="false"/>
+    -->
+    <!-- Alternative way -->
+    <!--
     <Environment name="acl/file.aclfolder" value="${app.home}/acls" type="java.lang.String" override="false"/>
     <Environment name="acl/file.localgroups" value="${app.home}/acls/acladmin.group" type="java.lang.String" override="false"/>
     <Environment name="acl/file.permissions" value="${app.home}/acls/acladmin.prms" type="java.lang.String" override="false"/>
@@ -9,9 +15,6 @@
     <Environment name="acl/anonymous.access" value="anonymous" type="java.lang.String" override="false"/>
     <Environment name="acl/file.localusers" value="${app.home}/acls/users.xml" type="java.lang.String" override="false"/>
     <Environment name="acl/persistence.provider" value="eionet.acl.PersistenceFile" type="java.lang.String" override="false"/>
-
-    <!--
-    <Environment name="acladmin/propertiesfile" value="${app.home}/acladmin.properties" type="java.lang.String" override="false"/>
     -->
 
 </Context>

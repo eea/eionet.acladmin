@@ -33,12 +33,19 @@ import eionet.acl.SignOnException;
 import eionet.acladmin.AcrossApps;
 import eionet.acladmin.Names;
 import eionet.acladmin.utils.Util;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.MissingResourceException;
-import java.util.ResourceBundle;
+import java.util.Properties;
 import java.util.StringTokenizer;
+import javax.naming.Context;
+import javax.naming.InitialContext;
+import javax.naming.Binding;
+import javax.naming.NamingException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -51,7 +58,10 @@ import javax.servlet.ServletException;
  */
 public abstract class BaseAC extends HttpServlet {
 
-    private ResourceBundle props;
+    public static final String RESOURCE_BUNDLE_NAME = "acladmin";
+    public static final String TOMCAT_CONTEXT = "java:comp/env/";
+
+    private Hashtable<Object, Object> props;
 
     protected HashMap apps;
     /** Holds ServiceClients (RPC clients). */
@@ -65,15 +75,6 @@ public abstract class BaseAC extends HttpServlet {
 
     protected HashMap acls;
 
-    /*protected boolean xisLogged(HttpServletRequest req) {
-     boolean ok = false;
-     session = getSession(req);
-     if (session != null && session.getAttribute(Names.USER_ATT) != null) {
-         ok = true;
-     }
-         return ok;
-     } */
-
     /**
      * returns the current Http session.
      */
@@ -86,13 +87,57 @@ public abstract class BaseAC extends HttpServlet {
      * Returns property value as STRING from the acladmin.properties file.
      */
     protected String getProperty(String property) throws Exception {
-        if (props == null)
-            try {
-                props = ResourceBundle.getBundle("acladmin");
-            } catch (MissingResourceException mre) {
-                throw new Exception("Properties file acladmin.properties is not existing in the classpath");
+        if (props == null) {
+            props = loadProperties();
+        }
+        return (String)props.get(property);
+    }
+
+    /**
+     * Load the configuration. First try JNDI, then fall back to property files.
+     * @return The properties in a hashtable.
+     */
+    public Hashtable<Object, Object> loadProperties() throws Exception {
+        Hashtable<Object, Object> props = new Hashtable<Object, Object>();
+        try {
+            Context initContext = new InitialContext();
+            if (initContext != null) {
+                // Load from JNDI. Tomcat puts its stuff under java:comp/env:
+                for (Enumeration<Binding> e = initContext.listBindings(TOMCAT_CONTEXT + RESOURCE_BUNDLE_NAME); e.hasMoreElements();) {
+                    Binding binding = e.nextElement();
+                    props.put(binding.getName(), binding.getObject());
+                }
             }
-            return props.getString(property);
+        } catch (NamingException mre) {
+            //throw new Exception("JNDI not configured properly");
+        }
+
+        // Load from properties file
+        if (props.size() == 0 || props.containsKey("propertiesfile")) {
+            try {
+                Properties fileProps = new Properties();
+                InputStream inStream = null;
+
+                if (props.containsKey("propertiesfile")) {
+                    try {
+                        inStream = new FileInputStream((String) props.get("propertiesfile"));
+                    } catch (Exception e) {
+                        throw new Exception("Properties file not found");
+                    }
+                } else {
+                    inStream = getClass().getResourceAsStream("/" + RESOURCE_BUNDLE_NAME + ".properties");
+                    if (inStream == null) {
+                        throw new Exception("Properties file is not found in the classpath");
+                    }
+                }
+                fileProps.load(inStream);
+                inStream.close();
+                props.putAll(fileProps);
+            } catch (IOException mre) {
+                throw new Exception("Properties file is not readable");
+            }
+        }
+        return props;
     }
 
     /**
