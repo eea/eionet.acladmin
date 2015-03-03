@@ -123,7 +123,7 @@ request.setAttribute("breadcrumbs", breadcrumbs);
 	    %>
         <div id="errormessage">
             <h1>Error!</h1>
-            <p><%=eionet.acladmin.utils.Util.replaceTags(err)%></p>
+            <div class="error-msg"><%=eionet.acladmin.utils.Util.replaceTags(err)%></div>
         </div><%
     }
     %>
