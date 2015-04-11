@@ -40,7 +40,7 @@ import eionet.rpcclient.ServiceClientIF;
 import eionet.acladmin.Names;
 
 /**
- *
+ * Servlet for main page.
  */
 public class Main extends BaseAC implements Names {
 
@@ -301,7 +301,7 @@ public class Main extends BaseAC implements Names {
     }
 
     /**
-     * redirect to correct JSP
+     * Redirect to correct JSP.
      */
     private void dispatch(HttpServletRequest req, HttpServletResponse res, String action) throws ServletException, IOException  {
 
