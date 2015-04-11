@@ -287,13 +287,12 @@ public class Main extends BaseAC implements Names {
                 selectedAppName = requestedAppName;
 
             } catch (ServiceClientException se) {
-                se.printStackTrace(System.out);
-
                 if (se.getMessage().indexOf("Not authenticated") != -1) {
                     //authentication failed in the remote server
                     appClients.remove(requestedAppName);
                     throw new ServiceClientException(se, "Authentication failed [" + requestedAppName + "]");
                 } else {
+                    se.printStackTrace(System.out);
                     throw new Exception("Technical error [" + requestedAppName + "]");
                 }
             }
