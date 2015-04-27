@@ -38,6 +38,8 @@ import eionet.rpcclient.ServiceClientIF;
 import eionet.acladmin.Names;
 import eionet.acladmin.utils.Util;
 
+import eionet.acladmin.servlets.MessageHandler;
+
 /**
  * Handler of storing methods for the ACL Admin Tool.
  */
@@ -68,6 +70,10 @@ public class SaveHandler {
             Hashtable groups = (Hashtable) req.getAttribute(Names.GROUPS_PARAM_NAME);
             prms.add(groups);
             methodName = "setLocalGroups";
+            
+            MessageHandler messageHandler = new MessageHandler();
+            messageHandler.attachSystemMessage(req, MessageHandler.SAVE_GROUPS_SUCCESS_MESSAGE);
+            
         } else if (action.equals(Names.ACL_SAVE_ACTION)) {
 
             String aclName = (String) sess.getAttribute(Names.ACL_ATT);
@@ -79,6 +85,10 @@ public class SaveHandler {
             } catch (Exception e) {
                 throw new ServiceClientException(e.getMessage());
             }
+            
+            MessageHandler messageHandler = new MessageHandler();
+            messageHandler.attachSystemMessage(req, MessageHandler.SAVE_ACL_SUCCESS_MESSAGE);
+            
             LOGGER.debug("ACL " + aclName + " validated.");
             prms.add(aclInfo);
             methodName = "setAclInfo";

@@ -1,6 +1,6 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
 <%@ page import="java.util.Hashtable, java.util.Vector, java.util.HashMap, java.util.Iterator,
-		eionet.acladmin.utils.Util, eionet.acladmin.Names" %>
+		eionet.acladmin.utils.Util, eionet.acladmin.Names, eionet.acladmin.servlets.MessageHandler" %>
 <%
 
 	
@@ -39,7 +39,7 @@
 	if ( request.getAttribute(Names.NOTOWNER_ATT) ==null || ((String)request.getAttribute(Names.NOTOWNER_ATT)).equals("false") )
 		isOwner=false;
 
-
+        MessageHandler.Message systemMessage = (MessageHandler.Message)request.getAttribute(MessageHandler.SYSTEM_MESSAGE_KEY);
 
 %>
 
@@ -129,6 +129,16 @@ request.setAttribute("breadcrumbs", breadcrumbs);
     %>
 
     <h1>Service Name: <%=thisAppName%></h1>
+    
+    <%
+    if (systemMessage!= null){
+	    %>
+        <div class="<%=systemMessage.getClassText()%>">
+            <%=systemMessage.getMessageText()%>
+        </div><%
+    }
+    %>
+    
     <br/>
     <form id="change_acl" action="main" method="post">
 		<fieldset style="display:none">
