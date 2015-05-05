@@ -270,7 +270,7 @@ request.setAttribute("breadcrumbs", breadcrumbs);
 					}
 					%>
 					<tr valign="top">
-						<td class="borderleft borderbottom" ><%=aclType%></td>
+						<td class="borderleft borderbottom <%=aclType%>" ><%=aclType%></td>
 						<td class="borderleft borderbottom" ><%=type%></td>
 						<td class="borderleft borderbottom" ><%=id%>&nbsp;</td>
 						<td class="borderleft borderbottom" ><%=perms%>&nbsp;</td>

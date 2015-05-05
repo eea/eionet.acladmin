@@ -29,3 +29,15 @@
 .borderbottom {
 	border-bottom: #008080 1px solid
 }
+
+#add_entry .object {
+        background-color: #90EE90;
+}
+
+#add_entry .doc {
+        background-color: #B2DFEE;
+}
+
+#add_entry .dcc {
+        background-color: #FFDAB9;
+}
