@@ -29,3 +29,20 @@ By default Tomcat is configured to copy the META-INF/context.xml file in the WAR
 <Host ... deployXML="false" ...
 ```
 For more, see http://tomcat.apache.org/tomcat-7.0-doc/config/host.html
+
+Building a Docker image
+-----------------------
+
+It is possible to build, test and push a Docker image of Eionet transfer to EEA's Docker registry. To do so you activate the `docker` profile. The `install` goal will do a test start up of the container. The `docker:push` will push the Docker image to dockerrepo.eionet.europa.eu:5000.
+```
+mvn -Pdocker install docker:push
+```
+To use `docker:push` you must have an account and add these lines to your `~/.m2/settings.xml`:
+```
+<server>
+  <id>dockerrepo.eionet.europa.eu:5000</id>
+  <username>{account}</username>
+  <password>{password}</password>
+</server>
+```
+

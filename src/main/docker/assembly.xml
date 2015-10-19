@@ -1,0 +1,42 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2 http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+
+<!-- This is the way to add files into the image -->
+  <files>
+    <file>
+      <source>target/classes/acl.properties</source>
+      <outputDirectory>.</outputDirectory>
+    </file>
+    <file>
+      <source>target/classes/acladmin.properties</source>
+      <outputDirectory>.</outputDirectory>
+    </file>
+    <file>
+      <source>target/classes/eionetdir.properties</source>
+      <outputDirectory>.</outputDirectory>
+    </file>
+    <file>
+      <source>target/classes/rpc.properties</source>
+      <outputDirectory>.</outputDirectory>
+    </file>
+  </files>
+
+  <fileSets>
+    <fileSet>
+      <directory>acls</directory>
+      <outputDirectory>acls</outputDirectory>
+    </fileSet>
+  </fileSets>
+  <dependencySets>
+    <!-- Inject the war file into the image a /maven -->
+    <dependencySet>
+      <useProjectArtifact>true</useProjectArtifact>
+      <includes>
+        <include>eionet:acladmin</include>
+      </includes>
+      <outputDirectory>.</outputDirectory>
+      <outputFileNameMapping>acladmin.war</outputFileNameMapping>
+    </dependencySet>
+  </dependencySets>
+</assembly>

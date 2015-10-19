@@ -11,6 +11,7 @@
         <env>local</env>
         <java_version>1.6</java_version>
         <checkstyle.config.location>${basedir}/docs/checkstyle.xml</checkstyle.config.location>
+        <docker.maven.plugin.rhuss.version>0.13.4</docker.maven.plugin.rhuss.version>
     </properties>
 
     <version>1.2-SNAPSHOT</version>
@@ -20,19 +21,6 @@
     <!-- configuration of Maven repositories to be used -->
 
     <repositories>
-    <!--
-        <repository>
-            <id>ehcache-repo</id>
-            <name>ehcache repository</name>
-            <url>http://oss.sonatype.org/content/repositories/sourceforge-releases</url>
-        </repository>
-        <repository>
-            <id>maven2-repository.dev.java.net</id>
-            <name>Java.net Repository for Maven</name>
-            <url>http://download.java.net/maven/2/</url>
-            <layout>default</layout>
-        </repository>
-        -->
         <repository>
             <id>eea</id>
             <name>EEA Release Repository</name>
@@ -41,7 +29,6 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-
     </repositories>
 
     <!-- the build configuration -->
@@ -133,7 +120,7 @@
                         </goals>
                         <configuration>
                             <tasks>
-                                <copy file="local.properties"
+                                <copy file="${env}.properties"
                                     tofile="${project.build.directory}/classes/acladmin.properties"
                                     overwrite="true" failonerror="false" />
                             </tasks>
@@ -289,4 +276,149 @@
         </plugins>
     </reporting>
 
+    <profiles>
+        <profile>
+          <id>docker</id>
+          <properties>
+            <env>default</env>
+          </properties>
+          <dependencies>
+            <dependency>
+                <groupId>eionet</groupId>
+                <artifactId>jolokia</artifactId>
+                <version>1.0-SNAPSHOT</version>
+                <type>war</type>
+            </dependency>
+          </dependencies>
+          <build>
+            <plugins>
+              <plugin>
+                <!-- The Docker Maven plugin is used to create docker image with the fat jar -->
+                <groupId>org.jolokia</groupId>
+                <artifactId>docker-maven-plugin</artifactId>
+                <version>${docker.maven.plugin.rhuss.version}</version>
+                <configuration>
+                  <verbose>true</verbose>
+                  <logDate>default</logDate>
+                  <autoPull>true</autoPull>
+                  <images>
+                    <!-- Image holding the artifact of this build -->
+                    <image>
+                      <!-- Alias name which can used for linking containers during runtime -->
+                      <alias>service</alias>
+                      <name>${project.artifactId}</name>
+                      <registry>dockerrepo.eionet.europa.eu:5000</registry>
+                      <!-- ....................................... -->
+                      <!-- Build configuration for creating images -->
+                      <!-- ....................................... -->
+                      <build>
+                        <from>tomcat:7-jre7</from>
+                        <maintainer>michimau &lt;mauro.michielon@eea.europa.eu&gt;</maintainer>
+                        <tags>
+                          <tag>latest</tag>
+                          <tag>${project.version}</tag>
+                        </tags>
+                        <!-- Assembly descriptor holds the reference to the created artifact-->
+                        <assembly>
+                          <descriptor>assembly.xml</descriptor>
+                        </assembly>
+                        <env>
+                          <CATALINA_OPTS>-Djava.security.egd=file:/dev/./urandom</CATALINA_OPTS>
+                        </env>
+                        <runCmds>
+                          <!-- <run>apt-get -y update &amp;&amp; apt-get -y install zip unzip vim subversion cron zsh</run> -->
+                          <run>[ -d /var/local/acladmin ] || mkdir /var/local/acladmin</run>
+                          <run>[ -d /var/local/acladmin/acls ] || cp -rp /maven/acls /var/local/acladmin</run>
+                          <run>rm -rf /usr/local/tomcat/webapps/*</run>
+                          <run>mv /maven/acladmin.war /usr/local/tomcat/webapps/ROOT.war</run>
+                          <run>[ -f /var/local/acladmin/acladmin.properties ] || mv /maven/acladmin.properties /var/local/acladmin</run>
+                          <run>[ -f /var/local/acladmin/eionetdir.properties ] || mv /maven/eionetdir.properties /var/local/acladmin</run>
+                          <run>mv /maven/acl.properties /var/local/acladmin</run>
+                          <run>mv /maven/rpc.properties /var/local/acladmin</run>
+                        </runCmds>
+                        <optimise>true</optimise>
+
+                        <!-- Expose ports -->
+                        <ports>
+                          <port>8080</port>
+                        </ports>
+                        <!-- Default command for the build image -->
+                        <!--<cmd>catalina.sh run</cmd> -->
+                      </build>
+
+                      <!-- ............................................................... -->
+                      <!-- Runtime configuration for starting/stopping/linking containers -->
+                      <!-- ............................................................... -->
+                      <run>
+                        <!-- Assign dynamically mapped ports to maven variables (which can be reused in integration tests) -->
+                        <ports>
+                          <port>tomcat.port:8080</port>
+                        </ports>
+                        <wait>
+                          <log>Deployment of web application archive /usr/local/tomcat/webapps/ROOT.war has finished in</log>
+                          <!-- Check for this URL to return a 200 return code .... -->
+                          <!--<url>http://${docker.host.address}:${tomcat.port}/</url>-->
+                          <!-- ... but at max 60 seconds -->
+                          <time>60000</time>
+			  <exec>
+			    <preStop>sleep 10</preStop>
+			  </exec>
+                        </wait>
+                        <log>
+                          <prefix>TC</prefix>
+                          <color>red</color>
+                        </log>
+                      </run>
+                    </image>
+                  </images>
+                </configuration>
+
+                <!-- Hooking into the lifecycle -->
+                <executions>
+                  <execution>
+                    <id>start</id>
+                    <phase>pre-integration-test</phase>
+                    <goals>
+                      <goal>build</goal>
+                      <goal>start</goal>
+                    </goals>
+                  </execution>
+                  <execution>
+                    <id>stop</id>
+                    <phase>post-integration-test</phase>
+                    <goals>
+                      <goal>stop</goal>
+                    </goals>
+                  </execution>
+                </executions>
+              </plugin>
+
+              <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>2.18.1</version>
+                <configuration>
+                  <systemPropertyVariables>
+                    <log.url>http://${docker.host.address}:${tomcat.port}/jolokia</log.url>
+                  </systemPropertyVariables>
+                </configuration>
+              </plugin>
+
+            </plugins>
+          </build>
+          <activation>
+            <activeByDefault/>
+          </activation>
+        </profile>
+    </profiles>
 </project>
+
+<!--
+COPY properties.env /properties.env
+COPY docker-entrypoint.sh /entrypoint.sh
+COPY docker-deploy-acladmin.sh /usr/local/bin/deploy-acladmin
+RUN chmod +x /usr/local/bin/deploy-acladmin
+RUN chmod +x /entrypoint.sh
+
+ENTRYPOINT sh /entrypoint.sh
+-->
