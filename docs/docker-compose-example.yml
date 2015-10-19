@@ -1,10 +1,11 @@
 web:
   restart: always
-  image: dockerrepo.eionet.europa.eu:5000/acladmin
+  image: acladmin:latest
   ports:
     - "5580:8080"
   volumes:
-    - /var/local/acladmin:/var/local/acladmin
+# Not needed for test installations. The docker image will put a default configuration there.
+#   - /var/local/acladmin:/var/local/acladmin
     - /etc/localtime:/etc/localtime:ro # Share timezone data with host
   environment:
     - CATALINA_OPTS=-Djava.security.egd=file:/dev/./urandom
