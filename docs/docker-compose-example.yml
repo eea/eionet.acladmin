@@ -1,0 +1,11 @@
+web:
+  restart: always
+  image: dockerrepo.eionet.europa.eu:5000/acladmin
+  ports:
+    - "5580:8080"
+  volumes:
+    - /var/local/acladmin:/var/local/acladmin
+    - /etc/localtime:/etc/localtime:ro # Share timezone data with host
+  environment:
+    - CATALINA_OPTS=-Djava.security.egd=file:/dev/./urandom
+  hostname: acladmin
