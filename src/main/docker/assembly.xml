@@ -5,6 +5,10 @@
 <!-- This is the way to add files into the image -->
   <files>
     <file>
+      <source>src/main/docker/context.xml</source>
+      <outputDirectory>META-INF</outputDirectory>
+    </file>
+    <file>
       <source>target/classes/acl.properties</source>
       <outputDirectory>.</outputDirectory>
     </file>

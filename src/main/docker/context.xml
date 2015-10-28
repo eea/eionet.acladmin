@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+
+    <Environment name="acl/propertiesfile" value="/var/local/acladmin/acl.properties" type="java.lang.String" override="false"/>
+    <Environment name="acladmin/propertiesfile" value="/var/local/acladmin/acladmin.properties" type="java.lang.String" override="false"/>
+    <Environment name="rpc/propertiesfile" value="/var/local/acladmin/rpc.properties" type="java.lang.String" override="false"/>
+
+    <!-- Alternative way -->
+    <!--
+    <Environment name="acl/file.aclfolder" value="/var/local/acladmin/acls" type="java.lang.String" override="false"/>
+    <Environment name="acl/file.localgroups" value="/var/local/acladmin/acls/acladmin.group" type="java.lang.String" override="false"/>
+    <Environment name="acl/file.permissions" value="/var/local/acladmin/acls/acladmin.prms" type="java.lang.String" override="false"/>
+    <Environment name="acl/owner.permission" value="c" type="java.lang.String" override="false"/>
+    <Environment name="acl/authenticated.access" value="authenticated" type="java.lang.String" override="false"/>
+    <Environment name="acl/anonymous.access" value="anonymous" type="java.lang.String" override="false"/>
+    <Environment name="acl/file.localusers" value="/var/local/acladmin/acls/users.xml" type="java.lang.String" override="false"/>
+    <Environment name="acl/persistence.provider" value="eionet.acl.PersistenceFile" type="java.lang.String" override="false"/>
+    -->
+
+</Context>
