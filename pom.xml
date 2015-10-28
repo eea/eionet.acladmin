@@ -331,14 +331,14 @@
                           <run>[ -d /var/local/acladmin/acls ] || cp -rp /maven/acls /var/local/acladmin</run>
                           <run>rm -rf /usr/local/tomcat/webapps/*</run>
                               <!-- Inject the context.xml file -->
-                          <run>( cd /maven ; zip -rg acladmin.war WEB-INF )</run>
+                          <run>( cd /maven ; zip -rg acladmin.war META-INF )</run>
                           <run>mv /maven/acladmin.war /usr/local/tomcat/webapps/ROOT.war</run>
                           <run>[ -f /var/local/acladmin/acladmin.properties ] || mv /maven/acladmin.properties /var/local/acladmin</run>
                           <run>[ -f /var/local/acladmin/eionetdir.properties ] || mv /maven/eionetdir.properties /var/local/acladmin</run>
                           <run>mv /maven/acl.properties /var/local/acladmin</run>
                           <run>mv /maven/rpc.properties /var/local/acladmin</run>
                         </runCmds>
-                        <optimise>true</optimise>
+                        <optimise>false</optimise>
 
                         <!-- Expose ports -->
                         <ports>
@@ -363,9 +363,6 @@
                           <!--<url>http://${docker.host.address}:${tomcat.port}/</url>-->
                           <!-- ... but at max 60 seconds -->
                           <time>60000</time>
-			  <exec>
-			    <preStop>sleep 10</preStop>
-			  </exec>
                         </wait>
                         <log>
                           <prefix>TC</prefix>
