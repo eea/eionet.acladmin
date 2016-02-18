@@ -9,9 +9,10 @@
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <env>local</env>
-        <java_version>1.6</java_version>
+        <java_version>1.7</java_version>
         <checkstyle.config.location>${basedir}/docs/checkstyle.xml</checkstyle.config.location>
         <docker.maven.plugin.rhuss.version>0.13.4</docker.maven.plugin.rhuss.version>
+        <maven.build.timestamp.format>yyyy-MM-dd'T'HHmm</maven.build.timestamp.format>
     </properties>
 
     <version>1.2-SNAPSHOT</version>
@@ -293,7 +294,6 @@
           <build>
             <plugins>
               <plugin>
-                <!-- The Docker Maven plugin is used to create docker image with the fat jar -->
                 <groupId>org.jolokia</groupId>
                 <artifactId>docker-maven-plugin</artifactId>
                 <version>${docker.maven.plugin.rhuss.version}</version>
@@ -302,29 +302,21 @@
                   <logDate>default</logDate>
                   <autoPull>true</autoPull>
                   <images>
-                    <!-- Image holding the artifact of this build -->
                     <image>
-                      <!-- Alias name which can used for linking containers during runtime -->
                       <alias>service</alias>
-                      <name>${project.artifactId}</name>
-                      <registry>dockerrepo.eionet.europa.eu:5000</registry>
-                      <!-- ....................................... -->
-                      <!-- Build configuration for creating images -->
-                      <!-- ....................................... -->
+                      <name>dockerrepo.eionet.europa.eu:5000/${project.groupId}/${project.artifactId}</name>
                       <build>
                         <from>tomcat:7-jre7</from>
                         <maintainer>michimau &lt;mauro.michielon@eea.europa.eu&gt;</maintainer>
                         <tags>
                           <tag>latest</tag>
                           <tag>${project.version}</tag>
+                          <tag>${maven.build.timestamp}</tag>
                         </tags>
                         <!-- Assembly descriptor holds the reference to the created artifact-->
                         <assembly>
                           <descriptor>assembly.xml</descriptor>
                         </assembly>
-                        <env>
-                          <CATALINA_OPTS>-Djava.security.egd=file:/dev/./urandom</CATALINA_OPTS>
-                        </env>
                         <runCmds>
                           <run>apt-get update &amp;&amp; apt-get install -y zip &amp;&amp; rm -rf /var/lib/apt/lists/*</run>
                           <run>[ -d /var/local/acladmin ] || mkdir /var/local/acladmin</run>
@@ -353,6 +345,9 @@
                       <!-- Runtime configuration for starting/stopping/linking containers -->
                       <!-- ............................................................... -->
                       <run>
+                        <env>
+                          <CATALINA_OPTS>-Djava.security.egd=file:/dev/./urandom</CATALINA_OPTS>
+                        </env>
                         <!-- Assign dynamically mapped ports to maven variables (which can be reused in integration tests) -->
                         <ports>
                           <port>tomcat.port:8080</port>
@@ -406,9 +401,6 @@
 
             </plugins>
           </build>
-          <activation>
-            <activeByDefault/>
-          </activation>
         </profile>
     </profiles>
 </project>
