@@ -15,7 +15,7 @@
         <maven.build.timestamp.format>yyyy-MM-dd'T'HHmm</maven.build.timestamp.format>
     </properties>
 
-    <version>1.2-SNAPSHOT</version>
+    <version>1.2.1</version>
     <name>acladmin</name>
     <url>https://github.com/eea/eionet.acladmin</url>
 
@@ -304,7 +304,7 @@
                   <images>
                     <image>
                       <alias>service</alias>
-                      <name>dockerrepo.eionet.europa.eu:5000/${project.groupId}/${project.artifactId}</name>
+                      <name>eeacms/${project.artifactId}</name>
                       <build>
                         <from>tomcat:7-jre7</from>
                         <maintainer>michimau &lt;mauro.michielon@eea.europa.eu&gt;</maintainer>
